@@ -1,0 +1,269 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+
+@import url('Gruppo.css');
+@import url('Montserrat.css');
+
+
+html, body{
+    margin:0 !important;
+    padding:0 !important;
+    background: #fff !important;
+}
+
+
+
+.navbar {
+  padding:0% 0% 5px 0% !important;
+  background:#ffffff !important;
+  border-bottom:0px solid red;
+}
+
+.navbarbrand{
+  width:70%;
+  border:0px dashed blue;
+}
+
+
+.globalheader {
+    display:block;
+    float:left;
+    height:100px;
+    width:100%;
+    margin:0px 0% 0px 0% !important;
+    padding:0px !important;
+    background:#033C5A !important;
+    border-bottom:1px solid #d8d8d8;
+}
+
+
+.globalheader_logo {
+    display:block;
+    float:left;
+    height:55px;
+    margin:0px 0px 0px 0px;
+    font-family: 'Gruppo', cursive;
+    border:0px dashed orange;
+}
+.globalheader_logo_img {
+    float:left;
+    width:50px;
+    margin:0px 0px 0px 0px;
+    border:0px dashed orange;
+}
+
+
+
+.versioncn{
+    display:block;
+    float:left;
+    width:100%;
+    color:#0066ff;
+    height:15px;
+    padding:0px 10px 0px 0px;
+    margin:0px 0px 20px 0px;
+    text-align:right;
+    font-size:11px;
+    border:0px dashed red;
+}
+
+.fgtext{
+  color:#fff !important;
+}
+
+.dropdown>a::after {
+    color:#fff;
+}
+
+.moduletitle {
+  font-weight:bold;
+  color:#033C5A !important;
+}
+
+
+.reglink {
+  cursor:pointer;
+  text-decoration:none;
+  color:#1F618D !important;
+}
+
+
+.reglinkblue {
+  cursor:pointer;
+  text-decoration:none;
+  color:#1F618D !important;
+}
+
+.reglinkwhite {
+  cursor:pointer;
+  text-decoration:none;
+  color:#fff !important;
+}
+
+.gmenulink {
+  cursor:pointer;
+  text-decoration:none;
+  color:#033C5A !important;
+}
+
+
+
+
+.pagecnwrapper{
+    display:block;
+    float:left;
+    width:80%;
+    min-height:500px;
+    margin:60px 10% 500px 10%;
+    font-family: 'Montserrat', sans-serif; 
+    color:#333;
+    z-index:1;
+    border:0px dashed orange;
+ }
+
+ .pagecn{
+    display:block;
+    float:left;
+    width:74%;
+    margin:0px 1.8% 0px 0px; 
+    border:0px dashed orange;
+ }
+
+.advcn{
+    display:block;
+    float:left;
+    width:24%;
+    border:0px dashed orange;
+ }
+
+
+.navlink{
+    text-decoration:none;
+    font-size:13px;
+    color:#2358C2;
+}
+.navlastlink{
+    text-decoration:none;
+    font-size:13px;
+    color:#990000;
+}
+
+.imagewrapper{
+  display:block;
+  float:left;
+  margin:10px 15px 0px 0px;
+}
+
+.leftblock{
+    display:block;
+    float:left;
+}
+
+.rightblock{
+    display:block;
+    float:right;
+}
+
+.bottomblock{
+    display:block;
+    float:bottom;
+}
+
+
+@font-face {
+   font-family: 'Material Icons';
+   font-style: normal;
+   font-weight: 400;
+   src: url(iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+   src: local('Material Icons'),
+        local('MaterialIcons-Regular'),
+        url(iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+        url(iconfont/MaterialIcons-Regular.woff) format('woff'),
+        url(iconfont/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+ 
+
+
+
+td.faqquestion{
+    text-align:left;
+    padding:3px 0px 3px 0px;
+    cursor: pointer;
+    color:#005581;
+}
+
+
+td.faqanswer{
+    text-align:left;
+    padding:0px 0px 20px 40px;
+    display:none;
+}
+
+
+span.faqquestionid{
+    text-align:left;
+    padding:0px 20px 0px 0px;
+    color:#005581;
+}
+
+.googlerow{
+    height:30px;
+}
+
+.googleoddrow{
+    height:30px;
+    background:#f6f6f6;
+}
+
+.googleheaderrow{
+    height:30px;
+}
+.googleheadercell{
+    vertical-align:middle;
+    text-align:left;
+    padding:20px;
+    background:#eee; 
+}
+
+.googlecell{
+    vertical-align:middle;
+    vertical-align: text-middle;
+    text-align:left;
+    font-size:16px;
+    padding:20px;
+}
+
+
+.globalfooter {
+  display:block;
+  float:left;
+  width:100%;
+  height:100px;
+  background:#033C5A;
+}
+

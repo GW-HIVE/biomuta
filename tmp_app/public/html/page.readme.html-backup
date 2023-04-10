@@ -1,0 +1,320 @@
+<biomutatag>
+
+<table width=90%><tr><td>
+<h4>Overview</h4>
+<p>BioMuta is an annotated database for single-nucleotide variations (SNVs)found in cancer. In BioMuta, variations are mapped to positions at genome, protein, and gene levels. The current BioMuta database (BioMuta v4.0) contains a total of 3,732,175 nonsynonymous SNVs (nsSNVs) reported in 18,986 genes across 42 cancer types in Disease Ontology. Please note - in the previous version (v3.0), a small number of variants were added to BioMuta following manual literature review of PubMed abstracts, resulting in an increase in the number of cancer types included in the database. We are in the process of updating our literature mining pipeline to include automatically mined associations from DiMeX, and we anticipate adding this information back to the database with the next release.</p>
+<br>
+<h4>Data sources and processing pipeline </h4>
+<p>Mutation data were retrieved from VCF or TSV files hosted by CIViC, ClinVar, COSMIC, ICGC, and TCGA. The data processing pipeline has undergone major revision since the previous release (v3.0). There are six major steps in the BioMuta pipeline: data retrieval (Downloader), QA/QC and mapping disease associations (Data Reporter), positional mapping (MutMapper), retrieval of functional annotations from curated databases and predictive software (Annotator), loading the database (Loader), and containerization (Publisher). Steps are described in detail below.</p>
+<h5>DOWNLOADER</h5>
+<p>Variation Call Format (VCF) Data is downloaded from the following resources:
+<ul><li>CIViC - <a class=blue href="https://civic.genome.wustl.edu/downloads/nightly/nightly-ClinicalEvidenceSummaries.tsv">https://civic.genome.wustl.edu/downloads/nightly/nightly-ClinicalEvidenceSummaries.tsv</a></li>
+	<li>ClinVar - <a class=blue href="ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/archive_1.0/2017/clinvar_20170130.vcf.gz">ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/archive_1.0/2017/clinvar_20170130.vcf.gz</a></li>
+	<li>COSMIC - sftp-cancer.sanger.ac.uk</li>
+    	<li>ICGC - <a class=blue href="https://dcc.icgc.org/api/v1/download?fn=/current/Summary/simple_somatic_mutation.aggregated.vcf.gz">https://dcc.icgc.org/api/v1/download?fn=/current/Summary/simple_somatic_mutation.aggregated.vcf.gz</a></li>
+    	<li>TCGA - Using gdc-client</li>	    
+</ul>		
+</p>
+<h5>DATA REPORTER</h5>
+<p>All data reporter steps are done independently for each primary data source.</p>
+<ol><li><p>Initial QC filter on VCF files - filter out variant calls if they match one of the following conditions:</p>
+	<ul style="list-style-type:disc"><li>the chromosome reported is not hg37 canonical</li>
+	    <li>the value for the ref base is longer that one base pair</li>
+	    <li>the value for the alt base is longer than one base pair</li>
+	    <li>the value for the ref base is not in ["A","C","G","T"]</li>
+	    <li>the value for the alt base is not in ["A","C","G","T",",", "-","."]</li>
+	    <li>the value for the ref base does not match corresponding base in hg37</li>
+         </ul><br>
+     </li>
+     <li><p>Mapping cancer terms to Disease Ontology ID - map various cancer terminologies used in VCF files are to corresponding IDs from the Cancer Disease Ontology (CDO) slim.</p>
+     </li>
+     <li><p>Creating mutation list - generate a list of mutations that passed the filtering in the first step. The frequency of each mutation is also given in this listing using DOID for representing cancer types. The resulting CSV file has the following fields:</p>
+		<table border="0" style="font-size:13px;">
+        	<col width="200">
+        	<hr></hr>
+		<tr>
+                	<td valign="top">chr</td>
+                	<td>chromosome</td>
+        	</tr>
+		<tr>
+			<td valign="top">pos</td>
+			<td>genomic position</td>
+		</tr>
+		<tr>
+                        <td valign="top">ref</td>
+                        <td>reference base</td>
+                </tr>			
+		<tr>
+                        <td valign="top">alt</td>
+                        <td>altered base</td>
+                </tr>
+		<tr>
+                        <td valign="top">passfilter</td>
+                        <td>pass/fail filter parsed from the VCF file (may vary by data source)</td>
+                </tr>
+		<tr>
+                        <td valign="top">source</td>
+                        <td>source of mutation data (CIVIC/CLINVAR/COSMIC/ICGC/TCGA)</td>
+                </tr>
+		<tr>
+                        <td valign="top">frequency</td>
+                        <td>contains space separated DOID:count values</td>
+                </tr>
+	   	</table>
+		<hr></hr>
+        </li>
+	<li><p>Data statistics report - Summary statistics for all the steps performed so far. These are summarizing:</p>
+		<ul style="list-style-type:disc"><li>number of total VCF calls in original files</li>
+			<li>number of calls filtered out</li>
+			<li>number of mutations by DOID</li>
+			<li>number of mutations by chromosome</li>
+		</ul>
+	</li>
+</ol>	
+<h5>MUTMAPPER</h5>
+<ol><li><p>Merging mutations from various resources - the mutation lists that have been generated for each data resource separately are merged in this step, and only those with "PASS" values  in the "FILTER" field of the original VCFs are considered to generate the master mutation inventory.</p>
+    </li>
+    <li><p>Checking sanity of Ensembl CDS sequences - the Ensembl data release 75 for GRCh37 is used for annotation. As a sanity check, for each protein-coding transcript, exon coordinates are extracted from GTF file and used to construct CDS sequence from genomic/chromosome sequences. We verify that the constructed CDS sequences are identical to corresponding CDS sequences given in Ensembl release 75.</p>		
+    </li>
+    <li><p>Checking sanity of Ensembl peptide sequences - in this step, the constructed CDS sequences are translated into peptides, and we verify that these peptides are identical to corresponding peptide sequences given in Ensembl release 75.</p>
+    </li>
+    <li><p>Mapping mutations to Ensembl peptides and identify corresponding amino acid change - for those mutations that map to exon ranges, the genomic position of the reported mutation is mapped to the following:</p>
+    <ol type="a"><li>position within the CDS sequence</li>
+	<li>index of the mutated codon</li>
+	<li>position within the codon</li>
+    </ol><br>
+  	<p>This allows identification of amino acid changes in the corresponding Ensembl peptide.</p>
+    </li>
+    <li><p>Identifying amino acid position in UniProtKB sequences - if Ensembl peptide and UniProtKB canonical isoform sequences are not identical, pairwise global alignment is performed to identify corresponding amino acid position in UniProtKB canonical isoform sequences.</p>
+    </li>
+    <li><p>Identifying amino acid position in RefSeq protein sequences - if Ensembl peptide and RefSeq protein sequences are not identical, pairwise global aligment is performed to identify corresponding amino acid position in RefSeq protein sequences.</p>
+    </li>
+</ol>
+<h5>ANNOTATOR</h5>
+<ol><li><p>UniProtKB site annotations - position specific annotations are extracted from UniProtKB for the following types of annotation:</p>
+    <ul style="list-style-type:disc"><li>Active_Site_Annotation</li>
+       	<li>Binding_Site_Annotation</li>
+     	<li>Calcium_Binding_Annotation</li>
+    	<li>Cross-link_Annotation</li>
+      	<li>Disulfide_Bond_Annotation</li>
+        <li>Glycosylation_Annotation</li>
+        <li>Initiator_Methionine_Annotation</li>
+        <li>Lipidation_Annotation</li>
+        <li>Metal_Binding_Annotation</li>
+        <li>Modified_Residue_Annotation</li>
+        <li>Natural_Variant_Annotation</li>
+        <li>NP_Binding_Annotation</li>
+        <li>Nucleotide_Binding_Annotation</li>
+        <li>Signal_Peptide_Annotation</li>
+        <li>Site_Annotation</li>
+     </ul><br>
+   	<p>The extracted site specific annotation is saved in a CSV file with the following fields:</p>
+		    <table border="0" style="font-size:13px;">
+                    <col width="200">
+                    <hr></hr>
+                    <tr>
+                                <td valign="top">canonical_ac</td>
+                                <td>accession for the UniProtKB canonical isoform</td>
+                    </tr>
+		     <tr>
+                                <td valign="top">annotation_type</td>
+                                <td>one of the site annotations listed above</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">start_pos</td>
+                                <td>start position of the site in the amino acid sequence</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">end_pos</td>
+                                <td>end position of the site in the amino acid sequence</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">annotation_value</td>
+                                <td>annotation given to the site</td>
+                    </tr>
+		    </table>
+		    <hr></hr>
+     </li>	
+     <li><p>PolyPhen-2 (Polymorphism Phenotyping v2) - PolyPhen-2 is used to predict the possible impact of an amino acid substitution on the structure and function of a human protein. For each amino acid alteration identified in the MUTMAPPER section, we generate a CSV summary file from PolyPhen-2 computations. The fields in this CSV file are:</p>
+		    <table border="0" style="font-size:13px;">
+                    <col width="200">
+                    <hr></hr>
+                    <tr>
+                                <td valign="top">canonical_ac</td>
+                                <td>accession for the UniProtKB canonical isoform</td>
+                    </tr>
+		    <tr> 
+                                <td valign="top">pos</td>
+                                <td>amino acid position</td>
+                    </tr>
+		    <tr> 
+                                <td valign="top">ref</td>
+                                <td>reference amino acid</td>
+                    </tr>
+		    <tr> 
+                                <td valign="top">alt</td>
+                                <td>altered amino acid</td>
+                    </tr>
+		    <tr> 
+                                <td valign="top">predicted_effect</td>
+                                <td>possible values are benign/possibly damaging/probably damaging/unknown</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">probability</td>
+                                <td>probability of the predicted effect</td>
+                    </tr>
+		    </table>
+		    <hr></hr>
+	</li>
+	<li>NetNGlyc - the NetNGlyc tool is used to predict N-Glycosylation sites in human proteins using artificial neural networks that examine the sequence context of Asn-Xaa-Ser/Thr (NXS/T) sequons. NetNGlyc prediction on variant amino acid sequence is computed and the prediction outcome is compared to the corresponding UniProtKB Glycosylation_Annotation of the wild-type amino acid sequence. Based on this comparison, we generate the following summary outcomes on loss/gain of glycosylation:</p>
+		    <table border="0" style="font-size:13px;">
+                    <col width="200">
+                    <hr></hr>
+                    <tr>
+                                <td valign="top">no_change</td>
+                                <td>Glycosylation_Annotation=yes, NetNGlyc_prediction=yes</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">no_change</td>
+                                <td>Glycosylation_Annotation=no, NetNGlyc_prediction=no</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">gain</td>
+                                <td>Glycosylation_Annotation=no, NetNGlyc_prediction=yes</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">loss</td>
+                                <td>Glycosylation_Annotation=yes, NetNGlyc_prediction=no</td>
+                    </tr>
+		    </table>
+	            <hr></hr>
+	<p>For each amino acid alteration identified in the MUTMAPPER section, we generate a CSV summary file from the NetNGlyc computations. The fields in this CSV file are:</p>
+		    <table border="0" style="font-size:13px;">
+                    <col width="200">
+                    <hr></hr>
+		    <tr>
+                                <td valign="top">canonical_ac</td>
+                                <td>accession for the UniProtKB canonical isoform</td>
+                    </tr>
+                    <tr> 
+                                <td valign="top">pos</td>
+                                <td>amino acid position</td>
+                    </tr>
+                    <tr> 
+                                <td valign="top">ref</td>
+                                <td>reference amino acid</td>
+                    </tr>
+                    <tr> 
+                                <td valign="top">alt</td>
+                                <td>altered amino acid</td>
+                    </tr>
+		    <tr>
+                                <td valign="top">uniprot_call</td>
+                                <td>True/False based on UniProtKB Glycosylation_Annotation</td>
+                    </tr>
+	     	    <tr>
+                                <td valign="top">netnglyc_call</td>
+                                <td>True/False based on NetNGlyc prediction</td>
+                    </tr>		
+		    <tr>
+                                <td valign="top">final_call</td>
+                                <td>possible values are no_change/loss/gain</td>
+                    </tr>	        
+		    </table>
+		    <hr></hr>
+	</li>
+</ol>
+<h5>LOADER</strong></h5>
+<p>Data in CSV files generated in the above sections are loaded to MySQL relational database.</p>
+<h5>PUBLISHER</h5>
+<p>All data in BioMuta backend is dockerized and made available at https://cloud.docker.com under the mazumderlab/biomuta repository.</p>
+<br>
+<h4>How to use</h4>
+<p>BioMuta can be used to query the cancer nsSNV database using a gene- or protein-centric search. Hits to the query term are summarized on the interim results page. Users can then select a specific protein of interest about which to view detailed results.</p>
+<h5>Search</h5>
+<p>The BioMuta search requires the user to supply a gene or protein identifier (gene symbol, UniProtKB AC, or RefSeq AC) in the text box. Click "Search" to submit query.</p>
+<img src="/beta/biomuta/content/Picture01.png" border="0">
+<br><br>
+<h5>Interim results</h5>
+<p>All possible hits to the submitted query will be listed in an interactive interim results table. Click on the hyperlinked UniProtKB AC to view detailed results for a given entity.</p>
+<img src="/beta/biomuta/content/Picture02.png" border="0">
+<br><br>
+<h5>Results</h5>
+<p>By default, the detailed results page for a search will display a paginated table of nsSNVs for the queried gene, accompanied by relevant identifiers and annotations.</p>
+<img src="/beta/biomuta/content/Picture03.png" border="0">
+<br><br>
+<p> The table is organized into the columns described below (listed in order from left to right):</p>
+<table border="0" style="font-size:13px;">
+<col width="200">
+<hr></hr>	
+	<tr>
+                <td valign="top">Chr</td>
+                <td>Chromosome</td>
+        </tr>
+	<tr>
+                <td valign="top">Chr Position</td>
+                <td>Genomic position of variant</td>
+        </tr>
+	<tr>
+                <td valign="top">Ref Base</td>
+                <td>Reference or wild-type nucleotide base</td>
+        </tr>
+        <tr>
+                <td valign="top">Alt Base</td>
+                <td>Nucleotide base resulting from variation</td>
+        </tr>
+	<tr>
+                <td valign="top">Protein Position</td>
+                <td>Position of variation in protein sequence</td>
+        </tr>
+        <tr>
+                <td valign="top">Ref Residue</td>
+                <td>Reference or wild-type amino acid residue</td>
+        </tr>
+        <tr>
+                <td valign="top">Alt Residue</td>
+                <td>Residue resulting from variation</td>
+        </tr>
+	<tr>
+                <td valign="top">Cancer Type</td>
+                <td>DOID and term corresponding to reported cancer type</td>
+        </tr>
+        <tr>
+                <td valign="top">UBERON ID</td>
+                <td>Uberon ID for corresponding anatomical entity</td>
+        </tr>
+	<tr>
+		<td valign="top">Frequency</td>
+		<td>Count of mutation across datasets</td>
+	</tr>	
+	<tr> 
+                <td valign="top">Site Annotations</td>
+                <td>If applicable, site-specific annotations retrieved from UniProtKB</td>
+        </tr>
+	<tr>
+                <td valign="top">Functional Predictions</td>
+                <td>If applicable, lists the predicted effect of the mutation reported by PolyPhen-2 and NetNGlyc</td>
+        </tr>
+ 	<tr>
+                <td valign="top">PMID List</td>
+                <td>If available, PMID(s) of manually curated publication(s) associated with the reported variation</td>
+        </tr>
+        <tr>
+                <td valign="top">Source</td>
+                <td>Data source of reported variation, can be CIViC, ClinVar, COSMIC, ICGC, or TCGA</td>
+        </tr>
+</table>
+<hr></hr>
+<p>Table content can be filtered by expanding the "Apply/Reset site filters" section by clicking the "+" icon. Select desired filters and click the "Apply" button. Only filters relevant to the selected protein will be available. If selecting more than one filter, please note the results will be built such that only results meeting both criteria will be displayed. To remove filters and display all results, click the "Reset" button.</p>
+<p>To view graphical summaries, click the "+" icons corresponding to each chart: "View cancer type vs. nsSNV frequency plot" and "View SNV frequency vs. amino acid position plot." The cancer type vs. nsSNV frequency plot displays the frequency of reported nsSNVs (y-axis) in the gene/protein of interest associated with specific cancer types, as indicated by DOIDs and names on the x-axis.</p>
+<img src="/beta/biomuta/content/Picture04.png" border="0">
+<br><br>
+<p>The SNV frequency vs. amino acid position plot shows the frequency of nsSNVs (y-axis) reported for each position in the amino acid sequence corresponding to the specified gene/protein (x-axis).</p>
+<img src="/beta/biomuta/content/Picture05.png" border="0">
+<br><br>
+<h4>Downloads</h4>
+<p>Charts can be printed or downloaded as .png, .jpg, .pdf, or .svg files by selecting the appropriate option from the chart options menu in the top right corner of the selected chart. Similarly, the table can be downloaded as a .csv file by clicking the link to "Download table in CSV format" at the top right of the detailed results page. In addition to downloads of the search results described above, users can also download the entire dataset (and archive versions) by selecting "Bulk downloads" from the top left menu on the BioMuta home page.</p>
+<br>
+<br>
+
+

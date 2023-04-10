@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/biomuta/static/css/main.6b160a20.css",
+    "main.js": "/biomuta/static/js/main.30e5ba52.js",
+    "static/js/787.ee4d86e2.chunk.js": "/biomuta/static/js/787.ee4d86e2.chunk.js",
+    "index.html": "/biomuta/index.html",
+    "main.6b160a20.css.map": "/biomuta/static/css/main.6b160a20.css.map",
+    "main.30e5ba52.js.map": "/biomuta/static/js/main.30e5ba52.js.map",
+    "787.ee4d86e2.chunk.js.map": "/biomuta/static/js/787.ee4d86e2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6b160a20.css",
+    "static/js/main.30e5ba52.js"
+  ]
+}

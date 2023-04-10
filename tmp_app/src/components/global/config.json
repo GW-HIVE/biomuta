@@ -1,0 +1,95 @@
+{
+  "module":"global",
+  "title":"HIVE Lab",
+  "menu":[
+    {
+      "pageid":"home",
+      "label":"HOME",
+      "url":"/home",
+      "children":[],
+      "nav":[
+      ]
+    },
+    {
+      "pageid":"projects",
+      "label":"PROJECTS",
+      "url":"/projects",
+      "children":[],
+      "nav":[
+        {"pageid":"home", "url":"/", "label":"HOME"}
+      ]
+    },
+    {
+      "pageid":"publications",
+      "label":"PUBLICATIONS",
+      "url":"/publications",
+      "children":[],
+      "nav":[
+        {"pageid":"home", "url":"/", "label":"HOME"}
+      ]
+    },
+    {
+      "pageid":"people",
+      "label":"PEOPLE",
+      "url":"/people",
+      "children":[],
+      "nav":[
+        {"pageid":"home", "url":"/", "label":"HOME"}
+      ]
+    },
+    {
+      "pageid":"resources",
+      "label":"RESOURCES",
+      "url":"/resources",
+      "children":[
+        {
+          "pageid":"tools",
+          "label":"TOOLS",
+          "url":"/tools",
+          "nav":[
+            {"pageid":"home", "url":"/", "label":"HOME"}
+          ]
+        },
+        {
+          "pageid":"datasets",
+          "label":"DATASETS",
+          "url":"/datasets",
+          "nav":[
+            {"pageid":"home", "url":"/", "label":"HOME"}
+          ]
+        }
+      ],
+      "nav":[
+        {"pageid":"home", "url":"/", "label":"HOME"}
+      ]
+    },
+    {
+      "pageid":"more",
+      "label":"MORE",
+      "url":"/more",
+      "children":[
+        {
+          "pageid":"opportunities",
+          "label":"OPPORTUNITIES",
+          "url":"/opportunities",
+          "nav":[
+            {"pageid":"home", "url":"/", "label":"HOME"}
+          ]
+        },
+        {
+          "pageid":"events",
+          "label":"EVENTS",
+          "url":"/events",
+          "nav":[
+            {"pageid":"home", "url":"/", "label":"HOME"}
+          ]
+        }
+      ],
+      "nav":[
+        {"pageid":"home", "url":"/", "label":"HOME"}
+      ]
+    }
+  ]
+}
+
+

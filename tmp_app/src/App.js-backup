@@ -1,0 +1,71 @@
+import React, { Component } from "react";
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import Headerone from "./components/global/header_one";
+import Footer from "./components/global/footer";
+import Alertdialog from './components/global/dialogbox';
+import Loadingicon from "./components/global/loading_icon";
+import Module from "./components/module";
+import globalConfigObj from "./components/global/config.json";
+import configObj from "./components/config.json";
+
+
+class App extends Component {
+
+  state = {
+    module:"biomuta",
+    isLoadedOne:false,
+    isLoadedTwo:false,
+    dialog:{
+      status:false, 
+      msg:""
+    }
+  };
+
+  handleDialogClose = () => {
+    var tmpState = this.state;
+    tmpState.dialog.status = false;
+    this.setState(tmpState);
+  }
+
+  componentDidMount() {
+  }
+
+
+  render() {
+ 
+	  alert("Hi there");
+
+    return (<div>Hi there</div>);
+
+    return (
+      <div>
+      <Alertdialog dialog={this.state.dialog} onClose={this.handleDialogClose}/>
+      <Headerone config={globalConfigObj}/>
+      <Router>
+        <Switch>
+          <Route
+            path="/:pageId"
+            render={(props) => (
+              <Module config={configObj} pageId={props.match.params.pageId}/>
+            )}
+          />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <Module config={configObj} pageId={"home"}/>
+            )}
+          />
+        </Switch>
+      </Router>
+      <Footer />
+      </div>
+    );
+
+    
+  }
+}
+
+export default App;
