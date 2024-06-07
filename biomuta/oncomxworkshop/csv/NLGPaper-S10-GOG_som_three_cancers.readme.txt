@@ -1,0 +1,53 @@
+Basic information
+
+-----------------------------------------------------------------------------------------------------------------
+Date of creation: December 18, 2017
+Version: BioMuta 3.0
+
+
+
+
+Summary
+
+-------------------------------------------------------------------------------------------------------------------
+These tables were generated as part of the supporting information to accompany submission of the manuscript titled "Loss and Gain of N-linked Glycosylation
+Sequons due to Single-nucleotide Variation in Cancer.The manuscript describes the subset of somatic-only LOG and GOG variants that appear across at least three cancer types in the below table. 
+This table contains 41 somatic variants predicted to cause a gain of the consensus NXS/T motif at that position in at least three cancer types.
+ These variants include ONLY those somatic variants WITHOUT germline variants occurring at the same positions occurring in three or more cancers.
+
+Column name			Description
+
+================		==================================================================================
+
+UniProtKB_AC			UniProtKB/Swiss-Prot Accession
+
+Gene_name			Gene name
+Protein_name			Protein name as reported by UniProt
+Sequence_Length			Length of protein in amino acids
+Signal_Peptide_Existence	Describes if a signal peptide is reported for that protein in UniProt
+Signal_Peptide_Position		Reports the annotated signal peptide position if Signal_Peptide_Existence is "Y"
+Cellular_component		Relevant cellular component keyword(s) associated with the protein in UniProt
+Motif_position			Position of the "N" in the identified NXS/T sequon
+Subsequence			Four-residue sequence about the NXS/T sequon beginning with the "N"
+Prediction			Predicted effect of variant; all should be gain_of_glycosylation
+Domain				Domain mapping to the position, if reported
+Secondary_Structure		Secondary structure mapping to the position, if reported
+Mutation_Position		Position of the altered residue
+Reference			Reference amino acid
+Variation			Altered amino acid resulting from nsSNV
+Genomic_Variation		Position of nucleotide variation within the coding frame
+Minor_Allele_Frequency		MAF retrieved through Annovar during annotation associated with that position in dbSNP
+Source_Freq			Frequency of samples containing this variant call by source
+PolyPhen2_Prediction		Functional prediction reported by PolyPhen2 software; can be possibly damaging, probably damaging, or benign
+Cancer_Type			Disease ontology ID (DOID) and label of cancers associated with samples containing this variant
+Data_Source			Primary source of data from which variant calls were obtained
+Patient_ID			Patient ID from primary source, when available
+PMID				PubMed article ID for associated literature, when available
+HGMD_Disease			Diseases associated with this variant in HGMD, when available
+HGMD_PMID			PubMed article ID corresponding to publication reporting disease association in HGMD, when available
+NetNGlycMotif			Four-residue sequence including NXS/T motif reported by NetNGlyc
+NetNGlycPrediction		Likelihood of actual glycosylation at the sequon, as reported by NetNGlyc
+
+
+
+

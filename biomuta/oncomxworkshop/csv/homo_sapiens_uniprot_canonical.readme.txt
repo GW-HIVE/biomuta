@@ -1,0 +1,30 @@
+
+
+Basic information
+-------------------------------------------------------------------------------------------------------
+Version: Oct. 25, 2017
+Record number: 21,538 canonical protein region sequences
+
+
+Summary
+--------------------------------------------------------------------------------------------------------
+This FASTA file was downloaded from UniProt Consortium in the link below. It includes 21,538 canonical  protein sequences that map to the protien coidng
+ genes. This pulls in TrEMBL entries for those genes that do not have a corresponding Swiss-Prot entries.(No isoforms)
+
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/Eukaryota/UP000005640_9606.fasta.gz
+
+
+Description
+---------------------------------------------------------------------------------------------------------------------------------
+> tr|UniqueIdentifier|EntryName ProteinName OS=OrganismName[ GN=GeneName]PE=ProteinExistence SV=SequenceVersion
+- 'tr' for UniProtKB/TrEMBL
+- UniqueIdentifier is the primary accession number of the UniProtKB entry.
+- EntryName is the entry name of the UniProtKB entry.
+- ProteinName is the recommended name of the UniProtKB entry as annotated in the RecName field. For UniProtKB/TrEMBL entries without a RecName field,
+  the SubName field is used.
+- In case of multiple Sub Names, the first one is used. The 'precursor' attribute is excluded, 'Fragment' is included with the name if applicable.
+- OrganismName(OS) is the scientific name of the organism of the UniProtKB entry.
+- Gene Name represent the gene name. If there is no gene name, OrderedLocus Name or ORFname, the GN field is not listed.
+- ProteinExistence(PE) is the numerical value describing the evidence for the existence of the protein.
+- SequenceVersion(SV)is the version number of the sequence.
+

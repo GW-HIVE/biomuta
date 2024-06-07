@@ -1,0 +1,37 @@
+
+Summary
+
+-------------------------------------------------------------------------------------------------------------------
+This table was generated as part of the supporting information to accompany submission of the manuscript titled "Loss and Gain of N-linked Glycosylation Sequons due 
+to Single-nucleotide Variation in Cancer." This manuscript describes the workflow for identifying all possible N-linked glycosylation (NLG) sequons described in the given table.
+This table contains 59,341 NLGs identified by one of three methods: high-confidence NLGs (previously reported in databases with accompanying validated evidence or manual assertion tags),
+NLGs predicted by NetNGlyc (http://www.cbs.dtu.dk/services/NetNGlyc/), and custom scripts to identify all NXS/T (X!=P) sequons by string search.
+
+
+Table and column description
+
+------------------------------------------------------------------------------------------------------------------
+
+
+Column name                     Description
+
+================                ==================================================================================
+
+UniProtKB_AC                    UniProtKB/Swiss-Prot Accession
+Gene_Symbol                     Gene Symbol
+Protein_name                    Protein name as reported by UniProt
+Sequence_Length                 Length of protein in amino acids
+Signal_Peptide_Existence        Describes if a signal peptide is reported for that protein in UniProt
+Signal_Peptide_Position         Reports the annotated signal peptide position if Signal_Peptide_Existence is "Y"
+Cellular_component              Relevant cellular component keyword(s) associated with the protein in UniProt
+Motif_position                  Position of the "N" in the identified NXS/T sequon
+Subsequence                     Four-residue sequence about the NXS/T sequon beginning with the "N"
+Methods                         Identification method(s) used to find a given sequon in a given protein
+Domain                          Domain mapping to the position, if reported
+Secondary_Structure             Secondary structure mapping to the position, if reported
+NetNGlyc_Prediction             Likelihood of actual glycosylation at the sequon, as reported by NetNGly
+
+
+
+
+

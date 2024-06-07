@@ -1,0 +1,56 @@
+Identification and Provenance fields
+===================================================================================================
+Object ID: 0001
+Type ID: 1
+Name: Human [taxID:9606] Proteome
+Title: -
+Version: 1.1
+Created: Jan 5, 2017 09:40:17
+Created by: Rahi Navelkar (rsn13@gwu.edu)
+Modified: -
+Modified by: -
+Digital Signature: D43F2404CA13E22594E5C8B04D3BBB81
+Verification status: in_progress
+Publication_status": Draft
+Authors: Maria Martin (martin@ebi.ac.uk); Leyla Garcia (ljgarcia@ebi.ac.uk)
+Usability domain: Collect all canonical proteins and their isoforms to get a comprehensive list
+of all Human [taxID: 9606] proteins.
+Keywords: complete proteome [UniProt KW-0181]
+
+
+Description
+===================================================================================================
+The human_proteome.csv file contains list of Human UniProtKB canonical accessions, 
+their record status, gene symbol, SwissProt isoforms and TrEMBL isoforms. The file was compiled 
+after processing UniProt dataset1 that contains the following files.
+1)UP000005640_9606_acc2groupid.tsv
+2)uniprot-proteome-9606-homo-sapiens-UP000005640-2017_11.rdf.gz
+
+
+Table Headers
+====================================================================================================
+Column Header		Description
+-------------           ------------
+canonical_accession: 	Primary record of protein in UniProtKB database that is encoded by one gene
+
+	     status: 	Status of protein record in UniProtKB database
+
+        gene_symbol: 	Recommended symbol that officially represents the gene
+
+  reviewed_isoforms: 	Protein records from UniProtKB/SwissProt database that have been manually 
+			curated and annotated based on experimental results, computed features and 
+			scientific conclusions
+
+unreviewed_isoforms: 	Protein records from UniProtKB/TrEMBL database that have been computationally 
+			annotated
+
+
+Statistics
+=====================================================================================================
+canonical_accession: 	21538
+status: 		2	
+gene_symbol: 		20854
+reviewed_isoforms: 	20195
+unreviewed_isoforms: 	14730
+
+

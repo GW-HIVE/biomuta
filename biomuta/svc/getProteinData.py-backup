@@ -1,0 +1,133 @@
+#!/usr/bin/python
+import os,sys
+import string
+import cgi
+import commands
+from optparse import OptionParser
+import json
+import util
+import datetime
+import time
+
+import MySQLdb
+
+
+__version__="1.0"
+__status__ = "Dev"
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~
+def main():
+
+   	usage = "\n%prog  [options]"
+        parser = OptionParser(usage,version="%prog " + __version__)
+        msg = "Input JSON text"
+        parser.add_option("-j","--inJson",action="store",dest="inJson",help=msg)
+
+	global PHASH
+	global AUTH
+	PHASH = {}
+
+
+	(options,args) = parser.parse_args()
+                
+	for file in ([options.inJson]):
+		if not (file):
+			parser.print_help()
+			sys.exit(0)
+	
+
+	configJson = json.loads(open("conf/config.json", "r").read())
+	serverJson  =  configJson[configJson["server"]]
+ 
+
+	
+	inJson  = json.loads(options.inJson)
+	outJson = {}
+
+	errorMsg = ''
+	try:
+        	DBH = MySQLdb.connect(
+			host = serverJson["dbinfo"]["dbhost"], 
+			user = serverJson["dbinfo"]["dbuserid"], 
+			passwd = serverJson["dbinfo"]["dbpassword"], 
+			db = serverJson["dbinfo"]["dbname"]
+		)
+		cur = DBH.cursor()	
+		seen = {"mutationid":{}} 
+                
+	
+		fieldValue = '%' + inJson["fieldvalue"].lower().strip() + '%'
+		sql = "SELECT canonicalAc FROM biomuta_protein WHERE lower(canonicalAc) LIKE '%s' " % (fieldValue)
+		cur.execute(sql)
+		row = cur.fetchone()
+		canonicalAc = row[0]
+ 
+
+		sql = configJson["queries"]["query_3"]
+		sql = sql.replace("QVALUE", canonicalAc)
+		cur.execute(sql)
+
+		labelList = configJson["tableheaders"]["proteinview"]["labellist"]
+		typeList = configJson["tableheaders"]["proteinview"]["typelist"]
+		csvBuffer = ",".join(labelList) + '\n'
+		objList = [labelList, typeList]
+		for row in cur.fetchall():
+			csvCollection = []
+			obj = []
+			for j in range(1,len(labelList)+1):
+				obj.append(row[j]);
+				val = str(row[j])
+				val = val.replace(',', '')
+				csvCollection.append(val);
+			csvBuffer += ', '.join(csvCollection) + '\n'
+			objList.append(obj)
+		
+		outJson = {"taskStatus":1, "inJson":inJson, "mutationtable":objList}	
+		outJson["captions"] = json.loads(open("conf/captions.json", "r").read())["proteinview"]
+
+
+		countHash1 = {}
+                countHash2 = {}
+		outJson["plotdata1"] = []
+                outJson["plotdata2"] = []
+                
+		sql = configJson["queries"]["query_4"]
+		sql = sql.replace("QVALUE", canonicalAc)
+		cur.execute(sql)
+        	for row in cur.fetchall():
+			doName = row[0]
+			countHash1[doName] = row[1]
+
+		for t in sorted(countHash1.items(), key=lambda x: x[1], reverse=True):
+			outJson["plotdata1"].append({"x": t[0], "y1":t[1]})
+        	for pos in sorted(countHash2):
+                	outJson["plotdata2"].append({"x": pos, "y1":countHash2[pos]})
+
+
+
+		timeStamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+		outputFile =  "/tmp/" + timeStamp + ".csv" 
+		outJson["downloadfilename"] = timeStamp + ".csv"
+		errorMsg = 'Could not write out CSV file ' + outputFile
+               
+		FW = open(outputFile, "w")
+		FW.write("%s" % (csvBuffer))
+        	FW.close()
+		cmd = "chmod 777 " + outputFile
+       		x = commands.getoutput(cmd)
+		DBH.close()
+	except Exception, e:
+                outJson["taskStatus"] = 0
+                outJson["errorMsg"] = errorMsg if errorMsg != "" else str(e)
+	
+
+	print json.dumps(outJson, indent=4, separators=(',',':'))
+
+
+if __name__ == '__main__':
+        main()
+
+
+

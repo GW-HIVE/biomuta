@@ -1,0 +1,23 @@
+"In Progress"
+
+PMCID: PMC4385274D
+
+Statistics
+
+Slim 82
+Status 1
+Top_type 2
+Top_Level_Organ_system 101
+Num_Mutations_for_organ_system_top 70
+Top_Level_Cell_type 15
+Num_Mutations_for_cell_type_top 15
+Child_Organ_system 79
+Num_Mutations_for_organ_system_child 48
+Child_Cell_type 132
+Num_Mutations_for_cell_type_child 109
+Original_Cancer_Term 1420
+Source 9
+Mutations_in_source 483
+Version_DO_Slim 2
+Action 10
+

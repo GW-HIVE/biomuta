@@ -1,0 +1,11 @@
+{
+	"proteinview":{
+		"plotdesc_1":"This chart displays the frequency of nsSNVs for the selected gene (y-axis)in the integrated BioMuta dataset for each cancer for which it is reported (x-axis). Taller bars indicate a greater frequency of variants in the selected gene for the corresponding cancer type. Note that the same nsSNV reported by multiple sources are counted as distinct variants for each source, and therefore frequencies reported in the chart do not reflect unique variants by position/substitution. Hovering the mouse over a bar will display a pop-up containing the cancer name and number of variants associated with that bar. Only cancers with non-zero counts for the queried gene are displayed in the chart."
+		,"plotdesc_2":"Each bar indicates the frequency of nsSNVs for the selected gene (y-axis) in the integrated BioMuta dataset for every amino acid position along the length of the encoded protein (y-axis). Taller bars indicate a greater frequency of variants reported at the corresponding protein position. Note that the same nsSNV reported by multiple sources are counted as distinct variants for each source, and therefore frequencies reported in the chart do not reflect unique variants by position/substitution. Hovering the mouse over a bar will display a pop-up containing the selected amino acid position and number of variants associated with that bar."	
+
+	,"tablefootnote":"*Click on the gene name to link to BioXpress database for related gene differential expression in human cancers<br><br>**Positions for entries with source 'Manual' and 'Literature Mining' may not correspond to the canonical sequences of UniProtKB and RefSeq, due to the variability of datasets used in individual studies."
+	}
+
+
+}
+

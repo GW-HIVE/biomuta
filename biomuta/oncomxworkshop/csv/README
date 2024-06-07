@@ -1,0 +1,40 @@
+Read me file for how data was generated for ovarian Cancer table for Rado
+
+File 1: ovca_log_rado.csv
+Description: All nsSNVs occurring in ovarian cancer samples mapped to 
+a loss of N-linked glycosylation sequon (NXS/T).
+
+File 2: ovca_gog_rado.csv
+Description: All nsSNVs occurring in ovarian cancer predicted to cause 
+a gain of N-linked glycosylation sequon (NXS/T).
+
+Data retrieval and integration
+Somatic nsSNVs were collected from COSMIC, IntOgen, ICGC, TCGA, ClinVar, and lit mining methods. Germline nsSNVs were
+collected from dbSNP, and cancer somatic nsSNVs were integrated using BioMuta workflow. All cancer types were mapped
+to DO terms. High confidence annotated sequence functional site data for N-glycosylation was retrieved from UniProtKB/SwissProt,
+ neXtProt, HPRD, dbPTM, NCBI-CDD.
+
+Identification of real and predicted human NLGS
+Identification of sequon NXS/T (X!=P) was performed by retrieving annotated N-glycosylation sites from the human UniProtKB/SwissProt
+proteome set, by using NetNGlyc and also by custom Python scripting.
+
+Mapping NLGs to variations and reporting of LOG/GOG
+By mapping, NLG to variation data set an altered NLG was considered a LOG if the altered version N abolished at first position, S and T
+at the third position or a newly generated P at the second position. Similarly for GOG if altered NLG contained new generated N at first
+position, S, and T at the third position or an abolished P at the second position of an NPS/T sequence. Additional GOGS were identified
+using NetNGlyc.
+
+LOG and GOG identification and pan-cancer analysis
+Significant variations, sequons, and proteins were identified according to the mapping
+results for LOG and GOG, especially for variations observed in multiple types of cancer.
+To assess the potential enrichment of a given feature and discrepancy of occurrence of
+that feature between datasets, a binomial test was used that was described in an earlier study. Numbers of associated cancer types were counted
+by summing distinct DOIDs annotated at the variant level.
+
+HGMD comparison
+The set of cancer-related, NLG-impacting variants was compared to variants in the Human Gene Mutation Database, HGMD includes only published gene
+lesions, and any identified nsSNV-affected LOG/GOG not cross-referenced by HGMD represented possible novel findings.
+
+Enrichment and Drug analyses
+Enrichment of pathways and drug network analysis was done using MetaCore™.
+  

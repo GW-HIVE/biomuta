@@ -1,0 +1,24 @@
+
+
+Table Description
+====================================================================================================
+Column Header		Description
+-------------           ------------
+	GlyTouCan_id: 	Glytoucan ID
+	     
+	PubChem_id: 	PubChem ID
+
+        UniCarb_id:     UniCarbKB ID
+  
+	Tax_id: 	Taxonomy ID
+
+
+
+
+Distinct Value Statistics
+=====================================================================================================
+GlyTouCan_id:		3368
+PubChem_id:		4462
+UniCarb_id:		530
+Tax_id:			301
+

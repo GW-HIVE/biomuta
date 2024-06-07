@@ -1,0 +1,14 @@
+UniProtKB_AC,Gene Symbol,Position,NetNGlyc_Prediction,Cancer_Type,Patient_ID,Mutation_Position,Reference,Variation,PolyPhen2_Prediction
+O15244-1,SLC22A2,72, +++ ,DOID:1793 / pancreatic cancer;DOID:1319 / brain cancer;DOID:219 / colon cancer,TCGA-DU-6399,74,T,M,probably damaging
+O15438-1,ABCC3,1007,   - ,DOID:4159 / skin cancer;DOID:10534 / stomach cancer;DOID:3571 / liver cancer,TCGA-FW-A3R5;TCGA-G3-A3CJ;TCGA-BR-8381,1009,S,F,probably damaging
+O75473-1,LGR5,77,   + ,DOID:219 / colon cancer;DOID:1324 / lung cancer;DOID:5672 / large intestine cancer,TCGA-CK-5916,77,N,S,possibly damaging
+P10163-1,PRB4,108,   + ,DOID:1319 / brain cancer;DOID:3070 / malignant glioma;DOID:11934 / head and neck cancer,TCGA-06-0154;TCGA-QR-A70O;TCGA-TN-A7HL,110,S,P,benign
+P10721-1,KIT,486,  ++ ,DOID:184 / bone cancer;DOID:1993 / rectum cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,-,486,N,D,possibly damaging
+P28472-1,GABRB3,105, +++ ,DOID:0060119 / pharynx cancer;DOID:10534 / stomach cancer;DOID:11934 / head and neck cancer,TCGA-FP-A4BE;TCGA-D6-6825,107,T,M,probably damaging
+Q96S37-1,SLC22A12,102,  ++ ,DOID:1319 / brain cancer;DOID:10534 / stomach cancer;DOID:219 / colon cancer,TCGA-CG-4300,104,T,M,probably damaging
+Q9NTG1-1,PKDREJ,295,   - ,DOID:4159 / skin cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-CR-7370,297,S,L,benign
+Q9NTG1-1,PKDREJ,923,   + ,DOID:10534 / stomach cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-BR-8680;TCGA-AZ-4315,925,S,L,benign
+Q9NUN5-1,LMBRD1,347,   + ,DOID:1319 / brain cancer;DOID:1324 / lung cancer;DOID:3070 / malignant glioma,TCGA-14-0813,349,S,C,possibly damaging
+Q9P121-1,NTM,44, +++ ,DOID:0060119 / pharynx cancer;DOID:5041 / esophageal cancer;DOID:11934 / head and neck cancer,TCGA-CR-6481,46,T,M,possibly damaging
+Q9UKZ4-1,TENM1,1757,  ++ ,DOID:4362 / cervical cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-IQ-7631;TCGA-DR-A0ZM,1759,S,L,possibly damaging
+Q9UPZ6-1,THSD7A,234, +++ ,DOID:0060119 / pharynx cancer;DOID:1993 / rectum cancer;DOID:5041 / esophageal cancer;DOID:11934 / head and neck cancer,TCGA-CN-4741,236,T,M,probably damaging

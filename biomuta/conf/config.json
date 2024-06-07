@@ -1,0 +1,286 @@
+{
+	"server":"prd"
+	,"module":"BioMuta"
+	,"title":"BioMuta - single-nucleotide variations (SNVs) in cancer"
+	,"desc":"Search BioMuta database for nsSNVs in cancer"
+	,"modulebase":"biomuta"
+	,"sections":[
+		{"id":"about", "label":"About BioMuta", "access":"111",
+			"nav":[
+				{"label":"Home", "url":"/home"}
+				,{"label":"Tools & Resources", "url":"/resources"}
+				,{"label":"BioMuta", "url":"/biomuta"}
+				,{"label":"About BioMuta", "url":"/biomuta/about"}
+			]
+		}
+		,{"id":"statsview", "label":"View statistics", "access":"111",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"View Statistics", "url":"/biomuta/statsview"}
+                        ]
+		}
+		,{"id":"download", "label":"Bulk downloads", "access":"111",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta/about"}
+                                ,{"label":"Bulk Downloads", "url":"/biomuta/download"}
+                        ]
+		}
+		,{"id":"apidoc", "label":"API documentation", "access":"111",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"API Documentation", "url":"/biomuta/apidoc"}
+                        ]
+			
+		}
+		,{"id":"faq", "label":"FAQ", "access":"111",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"FAQ", "url":"/biomuta/faq"}
+                        ]
+		}
+		,{"id":"readme", "label":"README", "access":"111",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"README", "url":"/biomuta/readme"}
+                        ]
+		}
+		,{"id":"proteinview", "label":"Protein View", "access":"000",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"Protein View", "url":"/biomuta/proteinview"}
+                        ]
+		}
+		,{"id":"searchresults", "label":"Search Results", "access":"000",
+			"nav":[
+                                {"label":"Home", "url":"/home"}
+                                ,{"label":"Tools & Resources", "url":"/resources"}
+                                ,{"label":"BioMuta", "url":"/biomuta"}
+                                ,{"label":"Search Results", "url":"/biomuta/searchresults"}
+                        ]
+		}
+	]
+	,"modulemenubg":"#eee"
+	,"modulemenufg":"#004065"
+	,"firstpageid":"about"
+	,"firstgpageid":"resources"
+	,"firstaction":"BrowseTypeTreeStep1"
+	,"queryform":{
+        	"boxlist":[[
+                {
+                        "name":"searchvalue1", "class":"valuetxtboxcls", "placeholder":"", "value":"KRAS"
+                        ,"type":"text", "readonly":false
+                        ,"style":"width:100%;height:30px;padding:3;border:1px solid #fff;font-size:12px;"
+                        ,"containerwidth":"90%"
+                        ,"boxlabel":"For example: KRAS, P01116, NP_203524, ENSP00000256078"
+                }
+                ,{
+                        "name":"searchbtn", "class":"searchbtncls", "value":" Search "
+                        ,"type":"submit", "readonly":false
+                        ,"style":"width:100%;height:30px;"
+                        ,"containerwidth":"10%"
+                }
+        	]]
+        	,"advanced":false
+	}
+	,"tableheaders":{
+		"searchresults":{
+                                "labellist":[" UniProtKB AC","Gene Symbol","RefSeq AC","Ensembl Peptide", 
+                                                "Modified Residues","Modified Functional Residues", "DOID Count", "PMID Count"]
+                                ,"typelist":["string","string","string","string","number", "number", "number", "number"]
+                        
+		}
+		,"proteinview":{
+                                "labellist":["Chr","Chr Position","Ref Base","Alt Base",
+                                                "Protein Position","Ref Residue", "Alt Residue",
+						"Cancer Type", "UBERON ID", "Frequency", "Source",
+						"Site Annotation", "Functional predictions", "PMID List"]
+                                ,"typelist":["string","number","string","string","number","string",
+						"string", "string", "string", "number", "string", "string", "string", "string"]
+		}
+	}
+	,"queries":{
+                        "generic":"SELECT canonicalAc, geneName, refseqAc, peptideId FROM biomuta_protein WHERE (lower(geneName) LIKE 'QVALUE' OR lower(canonicalAc) LIKE 'QVALUE' OR lower(refseqAc) LIKE 'QVALUE' OR lower(peptideId) LIKE 'QVALUE') LIMIT 100"
+
+                        ,"query_1":"SELECT canonicalAc, count(distinct posInPep, refResidue, altResidue) FROM biomuta_mutation_eff where refResidue != altResidue AND altResidue != '*' AND canonicalAc IN (CANONS) GROUP BY canonicalAc"
+                        ,"query_2":"SELECT A.canonicalAc, count(distinct A.posInPep, A.refResidue, A.altResidue) FROM biomuta_mutation_eff A, biomuta_protein_ann B where A.refResidue != A.altResidue AND A.altResidue != '*' AND A.canonicalAc = B.canonicalAc AND A.posInPep >= B.startPos AND A.posInPep <= B.endPos AND A.canonicalAc IN (CANONS) AND B.annType = 'uniprot' GROUP BY A.canonicalAc"
+			,"query_3":"SELECT A.id, A.chr, A.pos, A.ref, A.alt, B.posInpep, B.refResidue, B.altResidue, C.cancerId, '-', CAST(sum(C.frequency) AS UNSIGNED), upper(C.dataSrc) FROM biomuta_mutation A, biomuta_mutation_eff B, biomuta_mutation_freq C  WHERE A.id = B.mutationId AND A.id = C.mutationId AND B.refResidue != B.altResidue AND B.altResidue != '*' AND B.canonicalAc = 'QVALUE' GROUP BY A.id, C.cancerId ORDER BY B.posInpep ASC"
+
+
+                        ,"query_4":"SELECT B.id, B.doName, sum(A.frequency) FROM biomuta_mutation_freq A, biomuta_cancer B WHERE A.cancerId = B.id AND A.mutationId IN (SELECT DISTINCT mutationId FROM biomuta_mutation_eff WHERE refResidue != altResidue AND altResidue != '*' AND canonicalAc = 'QVALUE') GROUP BY B.doName;"
+			
+			,"query_5":"SELECT startPos, endPos, ref, alt, annType, annName, annValue FROM biomuta_protein_ann where canonicalAc = 'QVALUE'"
+	
+			,"query_6":"SELECT DISTINCT A.posInPep, sum(B.frequency) FROM biomuta_mutation_eff A, biomuta_mutation_freq B WHERE A.mutationId = B.mutationId AND A.refResidue != A.altResidue AND A.altResidue != '*' AND A.canonicalAc = 'QVALUE' GROUP BY A.posInPep"
+		
+			,"query_7":"SELECT mutationId, pmId FROM biomuta_mutation_pmid WHERE mutationId IN (SELECT mutationId FROM biomuta_mutation_eff WHERE canonicalAc = 'QVALUE')" 
+			
+			,"query_8":"select count(distinct pmId) FROM biomuta_mutation_pmid where mutationId in (SELECT mutationId FROM biomuta_mutation_eff WHERE canonicalAc = 'CANON' )"
+		
+			,"query_9":"select count(distinct cancerId) FROM biomuta_mutation_freq where mutationId in (SELECT mutationId FROM biomuta_mutation_eff WHERE canonicalAc = 'CANON')"
+		
+
+			,"query_10":"SELECT doId, uberonId FROM biomuta_do2uberon"
+	}
+	,"tst":{
+                "dbinfo":{
+                        "dbhost":"127.0.0.1"
+                        ,"dbname":"biomuta_tst"
+                        ,"dbuserid":"biomutapublic"
+                        ,"dbpassword":"biomutapublicpass"
+                }
+                ,"rootinfo":{
+			"baseurl":"/tst/biomuta"
+                	,"ghtmlroot":"https://hive.biochemistry.gwu.edu/tst/"
+                	,"htmlroot":"https://hive.biochemistry.gwu.edu/tst/biomuta/"
+                	,"cgiroot":"https://hive.biochemistry.gwu.edu/cgi-bin/tst/biomuta/"
+                	,"bioxpressroot":"/tst/bioxpress"
+                	,"pagebase":"/tst/biomuta"
+                	,"downloadbase":"/tst/biomuta"
+                	,"proteinviewurl":"/tst/biomuta/proteinview/"
+                	,"bioxpressurl":"/tst/bioxpress/transcriptview/"
+        	        ,"oncomxurl":"https://oncomx.org/searchview/?gene="
+
+                }
+		,"pathinfo":{
+                        "htmlpath":"/hive/tst/html/biomuta/"
+                        ,"cgipath":"/hive/tst/cgi-bin/biomuta/"
+                	,"tmppath":"/hive/net3/apache_temp/"
+		}
+	}
+	,"prd":{
+                "dbinfo":{
+                        "dbhost":"localhost"
+                        ,"dbname":"biomuta_prd"
+                        ,"dbuserid":"biomutapublic"
+                        ,"dbpassword":"biomutapublicpass"
+                }
+                ,"rootinfo":{
+                        "baseurl":"/biomuta"
+                        ,"ghtmlroot":"https://hive.biochemistry.gwu.edu/prd/"
+                        ,"htmlroot":"https://hive.biochemistry.gwu.edu/prd/biomuta/"
+                        ,"cgiroot":"https://hive.biochemistry.gwu.edu/cgi-bin/prd/biomuta/"
+                        ,"bioxpressroot":"/bioxpress/"
+                        ,"pagebase":"/biomuta"
+                        ,"downloadbase":"/biomuta"
+                        ,"proteinviewurl":"/biomuta/proteinview/"
+			,"bioxpressurl":"/bioxpress/transcriptview/"
+                	,"oncomxurl":"https://oncomx.org/searchview/?gene="
+                        ,"pubmedurl":"https://www.ncbi.nlm.nih.gov/pubmed/"
+			,"dourl":"http://disease-ontology.org/term/"
+			,"uberonurl":"http://fantom.gsc.riken.jp/5/sstar/UBERON:"
+		}
+                ,"pathinfo":{
+                        "htmlpath":"/hive/prd/html/biomuta/"
+                        ,"cgipath":"/hive/prd/cgi-bin/biomuta/"
+                	,"tmppath":"/hive/net3/apache_temp/"
+		}
+        }
+	,"dev":{
+                "dbinfo":{
+                        "dbhost":"localhost"
+                        ,"dbname":"biomuta_dev"
+                        ,"dbuserid":"biomutapublic"
+                        ,"dbpassword":"biomutapublicpass"
+                }
+                ,"rootinfo":{
+                        "baseurl":"http://localhost/frontendcode/biomuta"
+                        ,"ghtmlroot":"http://localhost/frontendcode/"
+                        ,"htmlroot":"http://localhost/frontendcode/biomuta/"
+                        ,"cgiroot":"http://localhost/cgi-bin/frontendcode/biomuta/"
+                        ,"bioxpressroot":"/frontendcode/bioxpress"
+                        ,"pagebase":"/frontendcode/biomuta"
+                        ,"downloadbase":"/frontendcode/biomuta"
+                        ,"proteinviewurl":"/frontendcode/biomuta/proteinview/"
+                        ,"bioxpressurl":"/frontendcode/bioxpress/transcriptview/"
+                        ,"oncomxurl":"https://oncomx.org/searchview/?gene="
+                }
+		,"pathinfo":{
+                        "htmlpath":"/data/work-projects/projects/frontendcode/html/biomuta/"
+                        ,"cgipath":"/data/work-projects/projects/frontendcode/cgi-bin/biomuta/"
+                }
+        }	
+	,"pageconf":{
+		"about":{
+			"tabletitle":"BioMuta v4.0 statistics"
+		}	
+		,"searchresults":{
+			"tabledesc":"Please click on the UniProtKB Accession to view detailed mutation results."
+		}
+		,"branchview":{
+			"link_1":"BioMuta<br>Explore observed SNV mutations in various cancers for<br>"
+			,"link_2":"BioXpress<br>Explore observed expression profile in various cancers for<br>"
+		}
+		,"proteinview":{
+			"plotdesc_1":"This chart displays the frequency of nsSNVs for the selected gene (y-axis) in the integrated BioMuta dataset for each cancer for which it is reported (x-axis). Taller bars indicate a greater frequency of variants in the selected gene for the corresponding cancer type. Note that the same nsSNV reported by multiple sources are counted as distinct variants for each source, and therefore frequencies reported in the chart do not reflect unique variants by position/substitution. Hovering the mouse over a bar will display a pop-up containing the cancer name and number of variants associated with that bar. Only cancers with non-zero counts for the queried gene are displayed in the chart."
+		
+			,"plotdesc_2":"Each bar indicates the frequency of nsSNVs for the selected gene (y-axis) in the integrated BioMuta dataset for every amino acid position along the length of the encoded protein (x-axis). Taller bars indicate a greater frequency of variants reported at the corresponding protein position. Note that the same nsSNV reported by multiple sources are counted as distinct variants for each source, and therefore frequencies reported in the chart do not reflect unique variants by position/substitution. Hovering the mouse over a bar will display a pop-up containing the selected amino acid position and number of variants associated with that bar."	
+
+			,"tablefootnote":""
+		
+			,"plottitle_1":"View cancer type vs. nsSNV frequency plot"
+		
+			,"plottitle_2":"View SNV frequency vs. amino acid position plot"
+	
+			,"tabletitle":"Reported nsSNVs for QVALUE"
+		
+			,"tabledesc":"This table lists all nsSNVs reported for QVALUE (GENENAME) - GENEDESC<br>Record pages in other resources: <a href=\"BIOXPRESSURL\">BioXpress</a>, <a href=\"https://www.oncomx.org/searchview/?gene=QVALUE\" target=_>OncoMX</a>, <a href=\"http://www.uniprot.org/uniprot/QVALUE\" target=_>UniProtKB</a>."
+			,"tablestat":"Total of ROWCOUNT rows with MUTCOUNT unique variations."
+
+			,"filtertitle":"Apply/Reset site filters"	
+			
+			,"sitefilters":{
+				"cancertype":{
+                                        "title":"Cancer type"
+                                        ,"filterhash":{
+                                        }
+                                }
+                		,"uniprot":{
+                        		"title":"UniProtKB annotation"
+					,"filterhash":{
+                                		"Active site":"Active_Site_Annotation"
+                                		,"Binding site":"Binding_Site_Annotation"
+                                		,"Calcium binding":"Calcium_Binding_Annotation"
+                                		,"Cross link":"Cross-link_Annotation"
+                                		,"Disulfide bond":"Disulfide_Bond_Annotation"
+                                		,"Glycosylation":"Glycosylation_Annotation"
+                                		,"Initiator methionine":"Initiator_Methionine_Annotation"
+                                		,"Lipidation":"Lipidation_Annotation"
+                                		,"Metal binding":"Metal_Binding_Annotation"
+                                		,"Modified residue":"Modified_Residue_Annotation"
+                                		,"Natural variant":"Natural_Variant_Annotation"
+                                		,"NP binding":"NP_Binding_Annotation"
+                                		,"Nucleotide binding":"Nucleotide_Binding_Annotation"
+                                		,"Signal peptide":"Signal_Peptide_Annotation"
+                                		,"Site":"Site_Annotation"
+                        		}
+                		}
+				,"predictions":{
+					"title":"Predictions using various SNP annotation tools"
+                                        ,"filterhash":{
+						"NetNGlyc+++ Gain":"+++|gain"
+						,"NetNGlyc--- Loss":"---|loss"
+						,"NetNGlyc+++ No Change":"+++|no_change"
+						,"NetNGlyc--- No Change":"---|no_change"
+						,"PolyPhen probably damaging":"probably damaging"
+						,"PolyPhen possibly damaging":"possibly damaging"
+						,"PolyPhen benign":"benign"
+					}
+				}
+        		}
+		}
+	}
+
+}
+

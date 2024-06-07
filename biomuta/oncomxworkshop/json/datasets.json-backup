@@ -1,0 +1,432 @@
+[
+	{
+		"categoryid":"1"
+		,"title":"Protein centric "
+		,"description":"category description 1"
+		,"datasets":[
+			{
+				"filename":"homo_sapiens_uniprot_idmapping.csv"
+				,"filetype":"csv"
+				,"readmefilename":"homo_sapiens_uniprot_idmapping.readme.txt"
+				,"title":"Human Proteome Accessions"
+				,"species":"Homo sapiens"
+                                ,"object_id":"0001"
+				,"status":1
+				,"description":"21,538 canonical isoform accessions mapped to 34,922 isoforms."
+				,"minitable":{
+					"headers":["UniProtKB Acc (canonical)", "Gene Symbol", 
+							"Isoform Accession(s)"]
+					,"content":[
+						["P04278-1", "SHBG", "P04278-1,P04278-2,..."]
+						,["P38398-1", "BRCA1", "P38398-1,P38398-2,..."]
+					]
+					,"colwidth":["40%","20%"]
+				}
+			}
+			,{
+				"filename":"homo_sapiens_uniprot_canonical.fasta"
+				,"filetype":"fasta"
+				,"species":"Homo sapiens"
+                                ,"object_id":"0002"
+				,"status":1
+				,"readmefilename":"homo_sapiens_uniprot_canonical.readme.txt"
+				,"title":"Human Proteome Canonical Sequences"
+				,"description":"21,538 canonical protein sequences."
+			}
+			,{
+                                "filename":"homo_sapiens_uniprot_all.fasta"
+                                ,"filetype":"fasta"
+				,"species":"Homo sapiens"
+				,"object_id":"0003"
+ 				,"status":1
+                                ,"readmefilename":"homo_sapiens_uniprot_all.readme.txt"
+                                ,"title":"Human Proteome All Isoform Sequences"
+                                ,"description":"56,970 protein sequences."
+                        }
+                        ,{
+                                "filename":"LOG_Germline.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0004"
+				,"status":1
+                                ,"readmefilename":"LOG_Germline.readme.txt"
+                                ,"title":"Loss of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\">(germline variants)</font>"
+                                ,"description":"37,498 germline variants that results in the loss of N-linked glycosylation sequons."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Position"]
+                                        ,"content":[
+                                                ["P04278-1", "SHBG", "380"]
+                                                ,["P01019-1", "AGT", "47"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        }
+                        ,{
+                                "filename":"GOG_Germline.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0005" 
+				,"status":1
+                                ,"readmefilename":"GOG_Germline.readme.txt"
+                                ,"title":"Gain of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\">(germline variants)</font>"
+                                ,"description":"39,455 germline variants that creates N-linked glycosylation sequons."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Position"]
+                                        ,"content":[
+                                                ["P04278-1", "SHBG", "356"]
+                                                ,["P01019-1", "AGT", "303"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        } 
+                        ,{
+                                "filename":"GOG_Somatic.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0006"
+				,"status":1
+                                ,"readmefilename":"GOG_Somatic.readme.txt"
+                                ,"title":"Gain of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\">(somatic variants)</font>"
+                                ,"description":"15,664 somatic variants that creates N-linked glycosylation sequons."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Position"]
+                                        ,"content":[
+                                                ["P06276-1", "BCHE", "209"]
+                                                ,["P01229-1", "LHB", "33"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"Human_Glycotransferase_Accessions.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+				,"object_id":"0007"
+				,"status":1
+                                ,"readmefilename":"Human_Glycotransferase_Accessions.readme.txt"
+                                ,"title":"Glycosyltransferase Accessions"
+                                ,"description":"277 UniProt Accessions mapped to human proteome glycosyltransferases"
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Protein Name"]
+                                        ,"content":[
+                                                ["P06737-1", "PYGL", "Glycogen Phosphorylase"]
+                                                ,["P54840-1", "GYS2", "Glycogen Synthase"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"Human_protein_centric_ID_Mapping.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0008"
+			        ,"status":0
+                                ,"readmefilename":"Human_protein_centric_ID_Mapping.readme.txt"
+                                ,"title":"Protein Centric ID Mapping"
+                                ,"description":"21,539 UniProt Accessions mapped to RefSeq, PDB, BioMuta, STRING, ChEMBL..."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "RefSeq",
+                                                        "PDB"]
+                                        ,"content":[
+                                                ["P38398-1", "NP_009..", "1JM7.."]
+						,["Q9HB961-1", "NP_068..", "2ILK"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+		        ,{
+                                "filename":"mus-musculus_uniprot_idmapping.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Mus musculus"
+                                ,"object_id":"0009"
+                                ,"status":1
+                                ,"readmefilename":"mus-musculus_uniprot_idmapping.readme.txt"
+                                ,"title":"Mouse Proteome Acessions"
+                                ,"description":"25,491 Canonical accessions mapped to 43,993 isoforms"
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc", "RefSeq Acc",
+                                                        "Isoform Accessions"]
+                                        ,"content":[
+                                                ["P97497-1", "SHBG", "P97497-1"]
+						,["P48754-1", "BRCA1", "P48754-1"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        }
+                        ,{
+                                "filename":"N_Glycan_Enzyme_Mapping_mouse.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Mus musculus"
+				,"object_id":"0010"
+				,"status":0
+                                ,"readmefilename":"N_Glycan_Enzyme_Mapping_mouse.readme.txt"
+                                ,"title":"N-Linked Glycosylation Enzyme Mapping"
+                                ,"description":"23 UniProt ID's mapped to RefSeq and GlycO ID's"
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc", "RefSeq Acc",
+                                                        "GlycO ID"]
+                                        ,"content":[
+                                                ["Q9D081", "NM_024..", "GOG491"]
+					        ,["Q921Q3-1", "NM_145..", "GOG491"]		
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        }
+                        ,{
+                                "filename":"Human_Proteome_N-Linked_Glycosylation_Positions_Predicted.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0011"
+                                ,"status":1
+                                ,"readmefilename":"Human_Proteome_N-Linked_Glycosylation_Positions_Predicted.readme.txt"
+                                ,"title":"N-Linked Glycosylation Sequons <font style=\"font-size:12px;\"> (predicted)</font>"
+                                ,"description":"42,973 N-linked glycosylation sequons predicted by NetNGlyc."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Position"]
+                                        ,"content":[
+                                                ["P01229-1", "LHB", "50"]
+						,["P07602-1", "PSAP", "101"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        }
+                        ,{
+                                "filename":"Human_Proteome_N-Linked_Glycosylation_Positions_Experimental.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+                                ,"object_id":"0012"
+			        ,"status":1
+                                ,"readmefilename":"Human_Proteome_N-Linked_Glycosylation_Positions_Experimental.readme.txt"
+                                ,"title":"N-Linked Glycosylation Sequons <font style=\"font-size:12px;\"> (experimental)</font>"
+                                ,"description":"2,507 N-linked glycosylation sequons determined experimentally."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol",
+                                                        "Position"]
+                                        ,"content":[
+                                                ["P06276-1", "BCHE", "509"]
+						,["P07602-1", "PSAP", "426"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+                        }
+                        ,{
+                                "filename":"NLGPaper-S7-LOG_somatic_only.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+   				,"object_id":"0013"
+         		        ,"status":1
+                                ,"readmefilename":"NLGPaper-S7-LOG_somatic_only.readme.txt"
+                                ,"title":"Loss of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\"> (somatic variants)</font>"
+                                ,"description":"8,888 somatic variants that results in loss of N-linked glycosylation sequons."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol","Position"]
+                                        ,"content":[
+                                                ["P38398-1", "BRCA1","306"]
+						,["P01579-1", "INFG", "120"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+			,{
+                                "filename":"Cancer_Disease_Ontology.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0014"
+                                ,"status":"1"
+                                ,"readmefilename":"Cancer_Disease_Ontology.readme.txt"
+                                ,"title":"Cancer Disease Ontology"
+                                ,"description":"1,420 Cancer terms mapped into 161 DO terms."
+                                ,"minitable":{
+                                        "headers":["DOID", "Original Cancer Term", "Source"]
+                                        ,"content":[
+                                                ["10283", "PRAD", "ICGC-TCGA"]
+                                                ,["1192", "Neurofibrosarcoma", "ClinVar"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"UniProt_PDB_sugar_positions_N_Linked.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0015"
+                                ,"status":"1"
+                                ,"readmefilename":"UniProt_PDB_sugar_positions_N_Linked.readme.txt"
+                                ,"title":"N-Linked Glycosylated Proteins in PDB"
+                                ,"description":"1,125 UniProt Accessions mapped to PDB with glycosylated amino acid positions."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "PDB ID","PDB Position"]
+                                        ,"content":[
+                                                ["P15848-1", "1FSU","279"]
+                                                ,["P36222-1", "1HJX","60"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"UniProt_PDB_sugar_positions_O_Linked.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0016"
+                                ,"status":"1"
+                                ,"readmefilename":"UniProt_PDB_sugar_positions_O_Linked.readme.txt"
+                                ,"title":"O-Linked Glycosylated Proteins in PDB"
+                                ,"description":"42 UniProt Accessions mapped to PDB with glycosylated amino acid positions."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "PDB ID", "PDB Position"]
+                                        ,"content":[
+                                                ["P27487-1", "1NU8","87"]
+                                                ,["P35442-1", "1YO8","555"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"GOG_som_three_cancers.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0017"
+                                ,"status":1
+                                ,"readmefilename":"GOG_som_three_cancers.readme.txt"
+                                ,"title":"Gain of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\">(multiple cancers, somatic variants)</font>"
+                                ,"description":"41 somatic variants that creates N-linked glycosylation sequons in different types of cancer."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol", "Position"]
+                                        ,"content":[
+                                                ["O43526-1", "KCNQ2","785"]
+						,["P07357-1", "C8A","169"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"LOG_som_three_cancers.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0018"
+			        ,"status":1
+                                ,"readmefilename":"LOG_som_three_cancers.readme.txt"
+                                ,"title":"Loss of N-Linked Glycosylation Sequons <font style=\"font-size:12px;\">(multiple cancers, somatic variants)</font>"
+                                ,"description":"13 somatic variants that results in loss of N-linked glycosylation sequons in different types of cancer."
+                                ,"minitable":{
+                                        "headers":["UniProtKB Acc (canonical)", "Gene Symbol", "Position"]
+                                        ,"content":[
+                                                ["O15244-1", "SLC22A2","72"]
+					        ,["P28472-1", "GABRB3","105"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+
+		]
+	}
+	,{
+		"categoryid":"2"
+		,"title":"Proteoform centric "
+                ,"description":"category description 2"
+		,"datasets":[
+                ]
+	},
+	{
+                "categoryid":"3"
+                ,"title":"Glycan centric "
+                ,"description":"category description 2"
+                ,"datasets":[
+			{
+                                "filename":"homo_sapiens_glycan_idmapping.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Homo sapiens"
+                                ,"object_id":"0019"
+			        ,"status":1
+                                ,"readmefilename":"homo_sapiens_glycan_idmapping.readme.txt"
+                                ,"title":"Human Glycome"
+                                ,"description":"3,369 GlyTouCan Id's mapped to PubChem, UniCarb and Taxonomy"
+                                ,"minitable":{
+                                        "headers":["GlyTouCan ID", "PubChem ID",
+                                                        "UniCarb ID"]
+                                        ,"content":[
+                                                ["G42295MA", "CID..,SID..", "1609"]
+                                                ,["G62574BY", "CID..,SID..", "3191"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"Mouse_Glycome.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Mus musculus"
+                                ,"object_id":"0020"
+                                ,"status":1
+                                ,"readmefilename":"Mouse_Glycome.readme.txt"
+                                ,"title":"Mouse Glycome"
+                                ,"description":"797 GlyTouCan ID's mapped to UniCarbKB, PubChem and GlycomeDB."
+                                ,"minitable":{
+                                        "headers":["GlyTouCan ID", "UniCarbKB", "PubChem"]
+                                        ,"content":[
+                                                ["G00998NI", "1603", "SID.."]
+                                                ,["G01361CV", "1119", "SID.."]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+		        ,{
+                                "filename":"Glycome_centric_enzyme_mapping_mouse.csv"
+                                ,"filetype":"csv"
+                                ,"species":"Mus musculus"
+                                ,"object_id":"0021"
+                                ,"status":1
+                                ,"readmefilename":"Glycome_centric_enzyme_mapping_mouse.readme.txt"
+                                ,"title":"Glycome Centric Enzyme Mapping"
+                                ,"description":"9,681 GlyTouCan ID's mapped to RefSeq, Taxonomy."
+                                ,"minitable":{
+                                        "headers":["GlyTouCan ID", "RefSeq ID", "Gene ID"]
+                                        ,"content":[
+                                                ["G66847Y1", "NM_010794", "17308"]
+                                                ,["G793482Y", "NM_019998", "56737"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+                        ,{
+                                "filename":"Glycan_Centric_ID_mapping.csv"
+                                ,"filetype":"csv"
+				,"species":"Homo sapiens"
+				,"object_id":"0022"
+			        ,"status":1
+                                ,"readmefilename":"Glycan_Centric_ID_mapping.readme.txt"
+                                ,"title":"Glycan Centric ID Mapping"
+                                ,"description":"40,078 GlyTouCan ID's mapped to GlycomeDB, GlycO and IUPAC"
+                                ,"minitable":{
+                                        "headers":["GlyTouCan ID", "GlycomeDB ID", "GlycO ID"]
+                                        ,"content":[
+                                                ["G00030VN", "14514", "GOG1337"]
+					        ,["G00176H2", "3768", "GOG58"]
+                                        ]
+                                        ,"colwidth":["40%","20%"]
+                                }
+
+                        }
+		]
+	}
+]
+	
+
+
+

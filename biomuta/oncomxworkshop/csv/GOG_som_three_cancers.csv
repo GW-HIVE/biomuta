@@ -1,0 +1,42 @@
+UniProtKB_AC,Gene_Name,Motif_Position,NetNGlycPrediction,Cancer_Type,Patient_ID,Mutation_Position,Reference,Variation,PolyPhen2_Prediction
+O14522-3,PTPRT,279,+,DOID:1319 / brain cancer;DOID:10534 / stomach cancer;DOID:3070 / malignant glioma,TCGA-27-1838,281,A,T,probably damaging
+O43526-1,KCNQ2,785,---,DOID:1793 / pancreatic cancer;DOID:1612 / breast cancer;DOID:10283 / prostate cancer,TCGA-B6-A0X7;TCGA-HC-7077,785,D,N,probably damaging
+O43699-1,SIGLEC6,249,+,DOID:1319 / brain cancer;DOID:219 / colon cancer;DOID:3070 / malignant glioma,TCGA-06-0129,251,A,T,benign
+O60469-1,DSCAM,211,-,DOID:363 / uterine cancer;DOID:1612 / breast cancer;DOID:1793 / pancreatic cancer;DOID:5041 / esophageal cancer,TCGA-D8-A1XR;TCGA-N9-A4Q1;TCGA-IB-7651,213,A,T,probably damaging
+O94973-1,AP2A2,113,-,DOID:1612 / breast cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-F4-6856;TCGA-A7-A4SF,115,A,T,-
+P04264-1,KRT1,248,-,DOID:4159 / skin cancer;DOID:2394 / ovarian cancer;DOID:5672 / large intestine cancer,TCGA-FW-A3R5,248,D,N,probably damaging
+P07357-1,C8A,169,++,DOID:4159 / skin cancer;DOID:363 / uterine cancer;DOID:1909 / melanoma,TCGA-DA-A3F8;TCGA-D1-A17Q,169,D,N,probably damaging
+P10721-1,KIT,564,+,DOID:1993 / rectum cancer;DOID:263 / kidney cancer;DOID:5672 / large intestine cancer,TCGA-BP-4355,566,N,S,probably damaging
+P21802-1,FGFR2,659,++,DOID:363 / uterine cancer;DOID:1612 / breast cancer;DOID:1324 / lung cancer,TCGA-66-2780,659,K,N,probably damaging
+P21817-1,RYR1,2861,+,DOID:8618 / oral cavity cancer;DOID:1793 / pancreatic cancer;DOID:363 / uterine cancer;DOID:11934 / head and neck cancer,TCGA-P3-A5Q6;TCGA-BS-A0UV;TCGA-IB-7651,2861,D,N,probably damaging
+P46531-1,NOTCH1,463,+,DOID:219 / colon cancer;DOID:3070 / malignant glioma;DOID:5041 / esophageal cancer;DOID:11934 / head and neck cancer;DOID:0060119 / pharynx cancer;DOID:1319 / brain cancer,TCGA-CV-7236;TCGA-DU-6400,465,A,T,probably damaging
+P54852-1,EMP3,42,+++,DOID:8618 / oral cavity cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-CV-6952,42,D,N,benign
+Q02817-1,MUC2,1750,-,DOID:1612 / breast cancer;DOID:3571 / liver cancer;DOID:1781 / thyroid cancer;DOID:2394 / ovarian cancer;DOID:10283 / prostate cancer;DOID:1319 / brain cancer;DOID:1993 / rectum cancer,TCGA-FY-A3NP;TCGA-CS-5393,1750,T,N,benign
+Q13002-1,GRIK2,528,+,DOID:8618 / oral cavity cancer;DOID:1612 / breast cancer;DOID:11054 / urinary bladder cancer,TCGA-K4-A3WU,528,D,N,probably damaging
+Q13349-1,ITGAD,1070,-,DOID:363 / uterine cancer;DOID:1993 / rectum cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-EI-6917;TCGA-AX-A05Z;TCGA-AZ-4315,1070,D,N,benign
+Q4ZHG4-1,FNDC1,253,-,DOID:363 / uterine cancer;DOID:1793 / pancreatic cancer;DOID:1993 / rectum cancer,TCGA-B5-A11E;TCGA-IB-7651,253,K,N,-
+Q685J3-1,MUC17,2784,+,DOID:2394 / ovarian cancer;DOID:11934 / head and neck cancer;DOID:0060119 / pharynx cancer,TCGA-BA-5556,2784,T,N,possibly damaging
+Q6P1J6-1,PLB1,645,+,DOID:363 / uterine cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-D1-A101;TCGA-CV-7414,645,D,N,probably damaging
+Q6UWW8-1,CES3,161,+,DOID:4159 / skin cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-FR-A726;TCGA-CK-5913,161,D,N,probably damaging
+Q6UX06-1,OLFM4,370,-,DOID:1793 / pancreatic cancer;DOID:1612 / breast cancer;DOID:5041 / esophageal cancer,TCGA-AC-A2FM,372,R,S,probably damaging
+Q7Z304-1,MAMDC2,319,+,DOID:4159 / skin cancer;DOID:1612 / breast cancer;DOID:11054 / urinary bladder cancer,TCGA-D8-A1JA;TCGA-GN-A4U4;TCGA-GM-A2DO,319,D,N,probably damaging
+Q7Z5H5-1,VN1R4,263,+,DOID:4362 / cervical cancer;DOID:1793 / pancreatic cancer;DOID:11934 / head and neck cancer,TCGA-C5-A1BK;TCGA-IB-7888;TCGA-CV-7409,265,L,S,possibly damaging
+Q86TH1-1,ADAMTSL2,44,++,DOID:10534 / stomach cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-BR-6452;TCGA-AZ-4315,44,D,N,benign
+Q8IZD2-1,KMT2E,902,-,DOID:363 / uterine cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-B5-A11E;TCGA-AZ-4315,902,D,N,probably damaging
+Q8N158-1,GPC2,200,++,DOID:1612 / breast cancer;DOID:5041 / esophageal cancer;DOID:5672 / large intestine cancer,TCGA-C8-A12T,200,D,N,benign
+Q8N8F6-1,YIPF7,141,++,DOID:4362 / cervical cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-BA-4075;TCGA-LP-A7HU,141,D,N,possibly damaging
+Q8NFZ4-1,NLGN2,540,+,DOID:8618 / oral cavity cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-CV-5977,542,A,T,probably damaging
+Q8NGZ4-1,OR2G3,159,+,DOID:363 / uterine cancer;DOID:219 / colon cancer;DOID:1324 / lung cancer,TCGA-AP-A0LM;TCGA-CA-6718,159,H,N,benign
+Q8TC71-1,SPATA18,404,---,DOID:363 / uterine cancer;DOID:1319 / brain cancer;DOID:1793 / pancreatic cancer;DOID:1324 / lung cancer,TCGA-BS-A0UV;TCGA-CS-5396;TCGA-IB-7651,404,K,N,probably damaging
+Q8TDM6-1,DLG5,1799,+,DOID:363 / uterine cancer;DOID:0060119 / pharynx cancer;DOID:11934 / head and neck cancer,TCGA-AX-A0J0;TCGA-BS-A0UF;TCGA-CN-6018,1799,D,N,probably damaging
+Q92556-1,ELMO1,55,+,DOID:4159 / skin cancer;DOID:1319 / brain cancer;DOID:3070 / malignant glioma,TCGA-32-1982;TCGA-EE-A29L,55,D,N,probably damaging
+Q92736-1,RYR2,896,++,DOID:0060119 / pharynx cancer;DOID:1324 / lung cancer;DOID:11934 / head and neck cancer,TCGA-DQ-5631,898,I,T,probably damaging
+Q96PZ7-1,CSMD1,3053,+,DOID:4159 / skin cancer;DOID:10534 / stomach cancer;DOID:219 / colon cancer,TCGA-FR-A726;TCGA-BR-8370,3053,D,N,probably damaging
+Q9BXX0-1,EMILIN2,759,+,DOID:363 / uterine cancer;DOID:1324 / lung cancer;DOID:11054 / urinary bladder cancer,TCGA-AX-A0J0;TCGA-BT-A20J,759,K,N,probably damaging
+Q9H2B2-1,SYT4,89,+++,DOID:363 / uterine cancer;DOID:1612 / breast cancer;DOID:219 / colon cancer,TCGA-E2-A1LE;TCGA-D1-A17Q,89,K,N,benign
+Q9H9P2-1,CHODL,185,+,DOID:4159 / skin cancer;DOID:1612 / breast cancer;DOID:1324 / lung cancer,TCGA-DA-A1I1,186,P,S,probably damaging
+Q9UKJ8-1,ADAM21,278,+,DOID:4159 / skin cancer;DOID:219 / colon cancer;DOID:5672 / large intestine cancer,TCGA-EB-A3Y7;TCGA-EE-A2GE;TCGA-A6-5660,278,D,N,benign
+Q9UQP3-1,TNN,1091,+,DOID:0060119 / pharynx cancer;DOID:1324 / lung cancer;DOID:11934 / head and neck cancer,TCGA-CR-7386;TCGA-F7-8489,1091,D,N,possibly damaging
+Q9Y5F1-1,PCDHB12,556,++,DOID:363 / uterine cancer;DOID:4159 / skin cancer;DOID:10534 / stomach cancer,TCGA-CG-5721;TCGA-D3-A51T;TCGA-BG-A0M4,556,D,N,probably damaging
+Q9Y6R7-1,FCGBP,1524,++,DOID:1612 / breast cancer;DOID:3070 / malignant glioma;DOID:1781 / thyroid cancer,TCGA-AO-A12E;TCGA-WB-A81W;TCGA-S7-A7WR,1524,T,N,benign
+Q9Y6R7-1,FCGBP,5331,++,DOID:4159 / skin cancer;DOID:1612 / breast cancer;DOID:1909 / melanoma,-,5331,S,N,probably damaging

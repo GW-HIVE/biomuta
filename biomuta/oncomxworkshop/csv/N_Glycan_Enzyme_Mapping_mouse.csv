@@ -1,0 +1,20 @@
+UniProt_AC,RefSeq_ID ,from_Residue,from_Residue_GlycO_ID,to_Residues,to_residue_GlycO_ID,Linkage
+Q9D081-1,NM_024178,N-glycan_core_b-D-GlcpNAc_B,GOG491,N-glycan_core_b-D-GlcpNAc_A,GOG491,C1-O4
+Q9D8C3-1,NM_026247 ,N-glycan_core_b-D-GlcpNAc_B,GOG491,N-glycan_core_b-D-GlcpNAc_A,GOG491,C1-O4
+Q8BML3-1,NM_177130 ,N-glycan_core_b-D-GlcpNAc_B,GOG491,N-glycan_core_b-D-GlcpNAc_A,GOG491,C1-O4
+Q921Q3-1,NM_145362,N-glycan_core_b-D-Manp,GOG491,N-glycan_core_b-D-GlcpNAc_B,GOG491,C1-O4
+Q9DBE8-1,NM_019998,N-glycan_a-D-Manp_4,GOG491,N-glycan_core_b-D-Manp,GOG491,C1-O6
+Q9DBE8-1,NM_019998,N-glycan_a-D-Manp_1,GOG491,N-glycan_core_b-D-Manp,GOG491,C1-O3
+Q3TZM9-1,NM_183142,N-glycan_a-D-Manp_21,GOG130,N-glycan_a-D-Manp_1,GOG491,C1-O2
+Q3TZM9-1,NM_183142,N-glycan_a-D-Manp_22,GOG219,N-glycan_a-D-Manp_21,GOG130,C1-O2
+Q8K2A8-1,NM_145939,N-glycan_a-D-Manp_19,GOG238,N-glycan_a-D-Manp_4,GOG491,C1-O3
+Q8VDI9-1,NM_133981,N-glycan_a-D-Manp_24,GOG603,N-glycan_a-D-Manp_19,GOG238,C1-O2
+Q8K2A8-1,NM_145939,N-glycan_a-D-Manp_20,GOG51,N-glycan_a-D-Manp_4,GOG491,C1-O6
+Q3TAE8-1,NM_001081264,N-glycan_a-D-Glcp_25,GOG219,N-glycan_a-D-Manp_22,GOG219,C1-O3
+Q6P8H8-1,NM_199035,N-glycan_a-D-Glcp_26,GOG29,N-glycan_a-D-Glcp_25,GOG219,C1-O3
+Q3UGP8-1,NM_001033441,N-glycan_a-D-Glcp_27,GOG29,N-glycan_a-D-Glcp_26,GOG29,C1-O2
+P27808-1,NM_010794,N-glycan_b-D-GlcpNAc_2,GOG491,N-glycan_a-D-Manp_1,GOG491,C1-O2
+Q9WTS2-1,NM_016893,N-glycan_a-L-Fucp_15,GOG491,N-glycan_core_b-D-GlcpNAc_A,GOG491,C1-O6
+Q921V5-1,NM_146035,N-glycan_b-D-GlcpNAc_5,GOG491,N-glycan_a-D-Manp_4,GOG491,C1-O2
+P15535-1,NM_022305,N-glycan_b-D-Galp_3,GOG491,N-glycan_b-D-GlcpNAc_2,GOG491,C1-O4
+Q9JJ04-1,NM_019804 ,N-glycan_b-D-Galp_3,GOG491,N-glycan_b-D-GlcpNAc_2,GOG491,C1-O4
