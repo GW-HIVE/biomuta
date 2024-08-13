@@ -1,8 +1,0 @@
-{
-    "app_port":{
-        "prd":"8181",
-        "tst":"8181"
-    },
-    "data_path":"/data/shared/biomuta/"
-}
-
