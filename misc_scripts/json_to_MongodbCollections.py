@@ -2,9 +2,23 @@ from pymongo import MongoClient
 import json
 import os
 
-# MongoDB connection details
-mongo_client = MongoClient('mongodb://127.0.0.1:8084/')  # Adjust the connection string if needed
-db = mongo_client['biomuta_db']  # Replace with your MongoDB database name
+def load_config(filepath):
+    with open(filepath, 'r') as f:
+        return json.load(f)
+
+config = load_config('config.json')
+
+# Extract MongoDB connection details from the configuration
+db_name = config['dbinfo']['dbname']
+mongo_port = config['dbinfo']['port']['tst']  # Replace 'tst' with the correct environment if needed
+mongo_host = f"mongodb://127.0.0.1:{mongo_port}/"
+admin_user = config['dbinfo']['admin']['user']
+admin_pass = config['dbinfo']['admin']['password']
+admin_db = config['dbinfo']['admin']['db']
+
+# MongoDB connection with authentication
+mongo_client = MongoClient(mongo_host, username=admin_user, password=admin_pass, authSource=admin_db)
+db = mongo_client[db_name]
 
 # Function to load JSON records from a file and insert them into MongoDB
 def insert_json_to_mongo(json_file_path, collection_name):

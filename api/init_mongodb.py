@@ -5,7 +5,6 @@ from typing import Optional, Union
 from pymongo import MongoClient, errors
 from pymongo.database import Database
 
-# Add the get_mongo_handle function here or import it if it's in a separate module
 def get_mongo_handle(
     host: str,
     authSource: str,
