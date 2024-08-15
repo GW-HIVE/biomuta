@@ -32,7 +32,7 @@ def main():
     project_name = config_obj['project']
     api_container_name = f"running_{project_name}_api_{server}"
     mongo_container_name = f"running_{project_name}_mongo_{server}"
-    mongo_network_name = f"{project_name}_network_{server}"
+    mongo_network_name = f"{config_obj['dbinfo']['bridge_network']}_{server}"
     mongo_port = config_obj["dbinfo"]["port"][server]
     data_path = config_obj["data_path"]
     username = config_obj["dbinfo"]["admin"]["user"]
