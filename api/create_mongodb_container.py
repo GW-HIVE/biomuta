@@ -33,7 +33,7 @@ def main():
     api_container_name = f"running_{project_name}_api_{server}"
     mongo_container_name = f"running_{project_name}_mongo_{server}"
     mongo_network_name = f"{project_name}_network_{server}"
-    mongo_port = config_obj["dbinfo"]["mongodb"]["port"]
+    mongo_port = config_obj["dbinfo"]["port"][server]
     data_path = config_obj["data_path"]
     username = config_obj["dbinfo"]["admin"]["user"]
     password = config_obj["dbinfo"]["admin"]["password"]
