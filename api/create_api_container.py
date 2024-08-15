@@ -69,7 +69,7 @@ def main():
         result = subprocess.run(
             cmd,
             shell=True,
-            text=True,
+            universal_newlines=True,  # instead of 'text=True' 
             encoding="utf-8",
             errors="replace",
             capture_output=True,
