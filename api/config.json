@@ -12,8 +12,8 @@
         "dbname":"biomuta_db",
         "port":{ 
             "prd":"",
-            "beta":"",
-            "tst":""
+            "beta":"8085",
+            "tst":"8084"
             
         },
         "bridge_network":"biomuta_api_backend_network",
