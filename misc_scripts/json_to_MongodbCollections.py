@@ -6,7 +6,7 @@ def load_config(filepath):
     with open(filepath, 'r') as f:
         return json.load(f)
 
-config = load_config('../api/config.file')
+config = load_config('../api/config.json')
 
 # Extract MongoDB connection details from the configuration
 db_name = config['dbinfo']['dbname']
