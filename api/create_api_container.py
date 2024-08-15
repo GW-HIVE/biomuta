@@ -72,7 +72,8 @@ def main():
             universal_newlines=True,  # instead of 'text=True' 
             encoding="utf-8",
             errors="replace",
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         if result.returncode != 0:
             print(
