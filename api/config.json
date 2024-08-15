@@ -1,0 +1,45 @@
+
+{
+    "project": "biomuta",
+
+    "api_port": {
+        "tst": "8082",
+        "prd": "8083"
+    },
+    "data_path": "/data/shared/biomutadb/",
+
+    "dbinfo":{
+        "dbname":"biomuta_db",
+        "port":{ 
+            "prd":"",
+            "beta":"",
+            "tst":""
+            
+        },
+        "bridge_network":"biomuta_api_backend_network",
+        "admin":{
+            "db":"admin",
+            "user":"superadmin",
+            "password":"superpass"
+        },
+        "biomuta_db": {
+        "db": "biomuta_db",  
+        "collections": {
+            "protein": "C_biomuta_protein",
+            "mutation": "C_biomuta_mutation",
+            "cancer": "C_biomuta_cancer",
+            "mutation_eff": "C_biomuta_mutation_eff",
+            "mutation_freq": "C_biomuta_mutation_freq",
+            "mutation_pmid": "C_biomuta_mutation_pmid",
+            "protein_ann": "C_biomuta_protein_ann",
+            "do2uberon": "C_biomuta_do2uberon",
+            "stats": "C_biomuta.stats",
+            "user": "biomutaadmin",
+            "password": "biomutapass"
+            
+            }
+        
+        }
+
+    }
+}
