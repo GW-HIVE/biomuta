@@ -161,118 +161,121 @@ handles complex searches within the BioMuta database and return relevant data re
 curl -X POST http://127.0.0.1:5000/searchBioMuta -H "Content-Type: application/json" -d "{\"qryList\":[{\"fieldname\":\"geneName\",\"fieldvalue\":\"KRAS\"}]}"
 
 '''
-from flask import Flask, request, jsonify
+from flask import request, jsonify
+from flask_restx import Resource
 from pymongo import MongoClient
 import json
 import datetime
 import time
 
-def searchBioMuta_route(app, db):
+def searchBioMuta_route(api, db):
     
-	@app.route('/searchBioMuta', methods=['POST'])
-	def search_biomuta():
-		outJson = {}
-		
-		try:
-			inJson = request.json
-			fieldValue = inJson["qryList"][0]["fieldvalue"].lower().strip().split('.')[0]
+    class SearchBioMuta(Resource):
+        def post(self):
+            outJson = {}
 
-			# MongoDB query for the generic search
-			query = {
-				"$or": [
-					{"geneName": {"$regex": fieldValue, "$options": "i"}},
-					{"canonicalAc": {"$regex": fieldValue, "$options": "i"}},
-					{"refseqAc": {"$regex": fieldValue, "$options": "i"}},
-					{"peptideId": {"$regex": fieldValue, "$options": "i"}}
-				]
-			}
+            try:
+                inJson = request.json
+                fieldValue = inJson["qryList"][0]["fieldvalue"].lower().strip().split('.')[0]
 
-			protein_collection = db['C_biomuta_protein']
-			protein_results = protein_collection.find(query)
+                # MongoDB query for the generic search
+                query = {
+                    "$or": [
+                        {"geneName": {"$regex": fieldValue, "$options": "i"}},
+                        {"canonicalAc": {"$regex": fieldValue, "$options": "i"}},
+                        {"refseqAc": {"$regex": fieldValue, "$options": "i"}},
+                        {"peptideId": {"$regex": fieldValue, "$options": "i"}}
+                    ]
+                }
 
-			labelList = ["UniProtKB AC", "Gene Symbol", "RefSeq AC", "Ensembl Peptide",
-						"Modified Residues", "Modified Functional Residues", "DOID Count", "PMID Count"]
-			typeList = ["string", "string", "string", "string", "number", "number", "number", "number"]
-			
-			objList1 = [labelList, typeList]
-			canonList = []
+                protein_collection = db['C_biomuta_protein']
+                protein_results = protein_collection.find(query)
 
-			for result in protein_results:
-				obj1 = [result.get("canonicalAc"), result.get("geneName"),
-						result.get("refseqAc"), result.get("peptideId")]
-				objList1.append(obj1)
-				canonList.append(result.get("canonicalAc"))
+                labelList = ["UniProtKB AC", "Gene Symbol", "RefSeq AC", "Ensembl Peptide",
+                            "Modified Residues", "Modified Functional Residues", "DOID Count", "PMID Count"]
+                typeList = ["string", "string", "string", "string", "number", "number", "number", "number"]
+                
+                objList1 = [labelList, typeList]
+                canonList = []
 
-			if canonList:
-				countHash = {"n1": {}, "n2": {}}
+                for result in protein_results:
+                    obj1 = [result.get("canonicalAc"), result.get("geneName"),
+                            result.get("refseqAc"), result.get("peptideId")]
+                    objList1.append(obj1)
+                    canonList.append(result.get("canonicalAc"))
 
-				# MongoDB query for query_1 and query_2 equivalents
-				mutation_eff_collection = db['C_biomuta_mutation_eff']
-				mutation_eff_query = {
-					"canonicalAc": {"$in": canonList},
-					"refResidue": {"$ne": "altResidue"},
-					"altResidue": {"$ne": "*"}
-				}
+                if canonList:
+                    countHash = {"n1": {}, "n2": {}}
 
-				# query_1
-				pipeline1 = [
-					{"$match": mutation_eff_query},
-					{"$group": {"_id": "$canonicalAc", "count": {"$sum": 1}}}
-				]
-				results1 = mutation_eff_collection.aggregate(pipeline1)
-				for res in results1:
-					countHash["n1"][res["_id"]] = res["count"]
+                    # MongoDB query for query_1 and query_2 equivalents
+                    mutation_eff_collection = db['C_biomuta_mutation_eff']
+                    mutation_eff_query = {
+                        "canonicalAc": {"$in": canonList},
+                        "refResidue": {"$ne": "altResidue"},
+                        "altResidue": {"$ne": "*"}
+                    }
 
-				# query_2
-				pipeline2 = [
-					{"$match": mutation_eff_query},
-					{"$group": {"_id": "$canonicalAc", "count": {"$sum": 1}}}
-				]
-				results2 = mutation_eff_collection.aggregate(pipeline2)
-				for res in results2:
-					countHash["n2"][res["_id"]] = res["count"]
+                    # query_1
+                    pipeline1 = [
+                        {"$match": mutation_eff_query},
+                        {"$group": {"_id": "$canonicalAc", "count": {"$sum": 1}}}
+                    ]
+                    results1 = mutation_eff_collection.aggregate(pipeline1)
+                    for res in results1:
+                        countHash["n1"][res["_id"]] = res["count"]
 
-				# MongoDB query for query_8 and query_9 equivalents
-				mutation_pmid_collection = db['C_biomuta_mutation_pmid']
-				mutation_freq_collection = db['C_biomuta_mutation_freq']
-				
-				pmid_count = {}
-				doid_count = {}
+                    # query_2
+                    pipeline2 = [
+                        {"$match": mutation_eff_query},
+                        {"$group": {"_id": "$canonicalAc", "count": {"$sum": 1}}}
+                    ]
+                    results2 = mutation_eff_collection.aggregate(pipeline2)
+                    for res in results2:
+                        countHash["n2"][res["_id"]] = res["count"]
 
-				for canon in canonList:
-					# query_8 equivalent
-					pmid_query = {"canonicalAc": canon}
-					pmid_count[canon] = mutation_pmid_collection.count_documents(pmid_query)
+                    # MongoDB query for query_8 and query_9 equivalents
+                    mutation_pmid_collection = db['C_biomuta_mutation_pmid']
+                    mutation_freq_collection = db['C_biomuta_mutation_freq']
+                    
+                    pmid_count = {}
+                    doid_count = {}
 
-					# query_9 equivalent
-					doid_query = {"canonicalAc": canon}
-					doid_count[canon] = mutation_freq_collection.count_documents(doid_query)
+                    for canon in canonList:
+                        # query_8 equivalent
+                        pmid_query = {"canonicalAc": canon}
+                        pmid_count[canon] = mutation_pmid_collection.count_documents(pmid_query)
 
-				for i in range(2, len(objList1)):
-					obj1 = objList1[i]
-					canon = obj1[0]
-					n1 = countHash["n1"].get(canon, 0)
-					n2 = countHash["n2"].get(canon, 0)
-					obj1 += [n1, n2, doid_count[canon], pmid_count[canon]]
+                        # query_9 equivalent
+                        doid_query = {"canonicalAc": canon}
+                        doid_count[canon] = mutation_freq_collection.count_documents(doid_query)
 
-					ac = obj1[0].split("-")[0]
-					obj1[0] = f'<a href="/biomuta/proteinview/{ac}">{obj1[0]}</a>'
+                    for i in range(2, len(objList1)):
+                        obj1 = objList1[i]
+                        canon = obj1[0]
+                        n1 = countHash["n1"].get(canon, 0)
+                        n2 = countHash["n2"].get(canon, 0)
+                        obj1 += [n1, n2, doid_count[canon], pmid_count[canon]]
 
-			outJson = {"taskStatus": 1, "inJson": inJson, "searchresults": objList1}
-			if len(objList1) == 2:
-				outJson = {"taskStatus": 0, "inJson": inJson, "errorMsg": "No results were found!"}
+                        ac = obj1[0].split("-")[0]
+                        obj1[0] = f'<a href="/biomuta/proteinview/{ac}">{obj1[0]}</a>'
 
-			timeStamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
-			outputFile = f'/tmp/biomuta-searchresults-{timeStamp}.csv'
-			outJson["downloadfilename"] = f'biomuta-searchresults-{timeStamp}.csv'
+                outJson = {"taskStatus": 1, "inJson": inJson, "searchresults": objList1}
+                if len(objList1) == 2:
+                    outJson = {"taskStatus": 0, "inJson": inJson, "errorMsg": "No results were found!"}
 
-			with open(outputFile, 'w') as FW:
-				for i in range(len(objList1)):
-					FW.write(f"{','.join(map(str, objList1[i]))}\n")
+                timeStamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+                outputFile = f'/tmp/biomuta-searchresults-{timeStamp}.csv'
+                outJson["downloadfilename"] = f'biomuta-searchresults-{timeStamp}.csv'
 
-		except Exception as e:
-			outJson["taskStatus"] = 0
-			outJson["errorMsg"] = str(e)
+                with open(outputFile, 'w') as FW:
+                    for i in range(len(objList1)):
+                        FW.write(f"{','.join(map(str, objList1[i]))}\n")
 
-		return jsonify(outJson)
+            except Exception as e:
+                outJson["taskStatus"] = 0
+                outJson["errorMsg"] = str(e)
 
+            return jsonify(outJson)
+
+    # Register the resource with the API and the route
+    api.add_resource(SearchBioMuta, '/searchBioMuta')

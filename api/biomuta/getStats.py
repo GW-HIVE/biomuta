@@ -94,50 +94,51 @@ Interact with a MongoDB collection to retrieve statistical data based on a given
 curl -X POST http://127.0.0.1:5000/getStats -H "Content-Type: application/json" -d "{\"statid\": \"66b606e202dafde1d7c99874\"}"
 '''
 from flask import request, jsonify
+from flask_restx import Resource
 from pymongo import MongoClient, errors
 from bson import ObjectId
 
-def get_stats_route(app, db):
-    collection = db['C_biomuta.stats']  # MongoDB collection name
-    
-    @app.route('/getStats', methods=['POST'])
-    def get_stats():
-        inJson = request.json
-        outJson = {"titles": {}, "taskstatus": 1}
+def get_stats_route(api, db):
+    class GetStats(Resource):
+        def post(self):
+            inJson = request.json
+            outJson = {"titles": {}, "taskstatus": 1}
 
-        try:
-            # Fetch titles from MongoDB
-            titles = collection.find({}, {"_id": 1, "countName": 1})
-            for title in titles:
-                outJson["titles"][str(title["_id"])] = title["countName"]
-
-            # Fetch the specific document based on the ObjectId
-            stat_id = inJson.get("statid")
             try:
-                object_id = ObjectId(stat_id)
-                stat_record = collection.find_one({"_id": object_id})
-                #print("Fetched stat_record:", stat_record)  # Debugging print
-            except Exception as e:
-                outJson["taskstatus"] = 0
-                outJson["errormsg"] = "Invalid ObjectId format: " + str(e)
-                return jsonify(outJson)
+                # Fetch titles from MongoDB
+                titles = db['C_biomuta.stats'].find({}, {"_id": 1, "countName": 1})
+                for title in titles:
+                    outJson["titles"][str(title["_id"])] = title["countName"]
 
-            if stat_record:
-                # Check if all necessary fields exist
-                if "countName" in stat_record and "versionName" in stat_record and "countValue" in stat_record:
-                    outJson["dataframe"] = [
-                        ["countName", "versionName", "countValue"],
-                        [stat_record["countName"], stat_record["versionName"], stat_record["countValue"]]
-                    ]
+                # Fetch the specific document based on the ObjectId
+                stat_id = inJson.get("statid")
+                try:
+                    object_id = ObjectId(stat_id)
+                    stat_record = db['C_biomuta.stats'].find_one({"_id": object_id})
+                except Exception as e:
+                    outJson["taskstatus"] = 0
+                    outJson["errormsg"] = "Invalid ObjectId format: " + str(e)
+                    return jsonify(outJson)
+
+                if stat_record:
+                    # Check if all necessary fields exist
+                    if "countName" in stat_record and "versionName" in stat_record and "countValue" in stat_record:
+                        outJson["dataframe"] = [
+                            ["countName", "versionName", "countValue"],
+                            [stat_record["countName"], stat_record["versionName"], stat_record["countValue"]]
+                        ]
+                    else:
+                        outJson["taskstatus"] = 0
+                        outJson["errormsg"] = "Fields missing in stat_record: " + str(stat_record)
                 else:
                     outJson["taskstatus"] = 0
-                    outJson["errormsg"] = "Fields missing in stat_record: " + str(stat_record)
-            else:
+                    outJson["errormsg"] = "Record not found."
+
+            except Exception as e:
                 outJson["taskstatus"] = 0
-                outJson["errormsg"] = "Record not found."
+                outJson["errormsg"] = "Unexpected error: " + str(e)
 
-        except Exception as e:
-            outJson["taskstatus"] = 0
-            outJson["errormsg"] = "Unexpected error: " + str(e)
+            return jsonify(outJson)
 
-        return jsonify(outJson)
+    # Register the resource with the API and the route
+    api.add_resource(GetStats, '/getStats')

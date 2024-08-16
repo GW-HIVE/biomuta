@@ -313,11 +313,14 @@ Mutation Table: Data related to the requested protein.
 Plot Data: Two datasets for visual representation.
 CSV File: A downloadable link to the CSV file containing the mutation table
 '''
-import logging
-from flask import Flask, request, jsonify
+from flask import request, jsonify
+from flask_restx import Resource, Namespace
 from pymongo import MongoClient
 
-def getProteinData_route(app, db):
+def getProteinData_route(api, db):
+    # Namespace creation
+    biomuta_ns = Namespace('biomuta', description='BioMuta related operations')
+    
     protein_collection = db['C_biomuta_protein']
     ann_collection = db['C_biomuta_protein_ann']
     do2uberon_collection = db['C_biomuta_do2uberon']
@@ -325,113 +328,117 @@ def getProteinData_route(app, db):
     mutation_freq_collection = db['C_biomuta_mutation_freq']
     mutation_pmid_collection = db['C_biomuta_mutation_pmid']
 
-    @app.route('/getProteinData', methods=['POST'])
-    def get_protein_data():
-        inJson = request.json
-        field_value = inJson.get("fieldvalue", "").strip()
+    class GetProteinData(Resource):
+        def post(self):
+            inJson = request.json
+            field_value = inJson.get("fieldvalue", "").strip()
 
-        try:
-            # Fetch protein data
-            protein = protein_collection.find_one({"canonicalAc": field_value})
-            if not protein:
-                return jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404
+            try:
+                # Fetch protein data
+                protein = protein_collection.find_one({"canonicalAc": field_value})
+                if not protein:
+                    return jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404
 
-            canonicalAc = protein['canonicalAc']
-            geneName = protein.get('geneName', 'Unknown Gene')
-            geneDesc = protein.get('description', 'Unknown Description').split("OS=")[0]
+                canonicalAc = protein['canonicalAc']
+                geneName = protein.get('geneName', 'Unknown Gene')
+                geneDesc = protein.get('description', 'Unknown Description').split("OS=")[0]
 
-            # Fetch annotations
-            annHash = {}
-            annotations = ann_collection.find({"canonicalAc": canonicalAc})
-            for ann in annotations:
-                annType = ann['annType']
-                if annType not in annHash:
-                    annHash[annType] = {}
-                for pos in range(ann['startPos'], ann['endPos'] + 1):
-                    key = f"{pos}:{ann['ref']}:{ann['alt']}"
-                    if key not in annHash[annType]:
-                        annHash[annType][key] = []
-                    annHash[annType][key].append(f"{ann['annName']}:{ann['annValue']}".replace(";", ""))
-            for annType in annHash:
-                for key in annHash[annType]:
-                    annHash[annType][key] = "; ".join(sorted(set(annHash[annType][key])))
+                # Fetch annotations
+                annHash = {}
+                annotations = ann_collection.find({"canonicalAc": canonicalAc})
+                for ann in annotations:
+                    annType = ann['annType']
+                    if annType not in annHash:
+                        annHash[annType] = {}
+                    for pos in range(ann['startPos'], ann['endPos'] + 1):
+                        key = f"{pos}:{ann['ref']}:{ann['alt']}"
+                        if key not in annHash[annType]:
+                            annHash[annType][key] = []
+                        annHash[annType][key].append(f"{ann['annName']}:{ann['annValue']}".replace(";", ""))
+                for annType in annHash:
+                    for key in annHash[annType]:
+                        annHash[annType][key] = "; ".join(sorted(set(annHash[annType][key])))
 
-            # Fetch doid to uberon mappings
-            doid2uberonid1 = {}
-            doid2uberonid2 = {}
-            doid2uberon_mappings = do2uberon_collection.find({})
-            for mapping in doid2uberon_mappings:
-                url = f"http://fantom.gsc.riken.jp/5/sstar/UBERON:{mapping['uberonId']}"
-                link = f"<a href={url}>UBERON:{mapping['uberonId']}</a>"
-                doid2uberonid1.setdefault(mapping['doId'], []).append(link)
-                doid2uberonid2.setdefault(mapping['doId'], []).append(f"UBERON{mapping['uberonId']}")
-            for doId in doid2uberonid1:
-                doid2uberonid1[doId] = "; ".join(doid2uberonid1[doId])
-                doid2uberonid2[doId] = "; ".join(doid2uberonid2[doId])
+                # Fetch doid to uberon mappings
+                doid2uberonid1 = {}
+                doid2uberonid2 = {}
+                doid2uberon_mappings = do2uberon_collection.find({})
+                for mapping in doid2uberon_mappings:
+                    url = f"http://fantom.gsc.riken.jp/5/sstar/UBERON:{mapping['uberonId']}"
+                    link = f"<a href={url}>UBERON:{mapping['uberonId']}</a>"
+                    doid2uberonid1.setdefault(mapping['doId'], []).append(link)
+                    doid2uberonid2.setdefault(mapping['doId'], []).append(f"UBERON{mapping['uberonId']}")
+                for doId in doid2uberonid1:
+                    doid2uberonid1[doId] = "; ".join(doid2uberonid1[doId])
+                    doid2uberonid2[doId] = "; ".join(doid2uberonid2[doId])
 
-            # Fetch cancer id to doName mappings
-            cancerid2doname = {}
-            countHash1 = {}
-            mutations = mutation_freq_collection.aggregate([
-                {"$match": {"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}}},
-                {"$lookup": {"from": "C_biomuta_cancer", "localField": "cancerId", "foreignField": "id", "as": "cancer"}},
-                {"$unwind": "$cancer"},
-                {"$group": {"_id": "$cancer.doName", "frequency": {"$sum": "$frequency"}}}
-            ])
-            for mutation in mutations:
-                cancerid2doname[mutation['_id']] = mutation['frequency']
-                countHash1[mutation['_id']] = mutation['frequency']
+                # Fetch cancer id to doName mappings
+                cancerid2doname = {}
+                countHash1 = {}
+                mutations = mutation_freq_collection.aggregate([
+                    {"$match": {"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}}},
+                    {"$lookup": {"from": "C_biomuta_cancer", "localField": "cancerId", "foreignField": "id", "as": "cancer"}},
+                    {"$unwind": "$cancer"},
+                    {"$group": {"_id": "$cancer.doName", "frequency": {"$sum": "$frequency"}}}
+                ])
+                for mutation in mutations:
+                    cancerid2doname[mutation['_id']] = mutation['frequency']
+                    countHash1[mutation['_id']] = mutation['frequency']
 
-            # Fetch positional frequency data
-            countHash2 = {}
-            freq_data = mutation_freq_collection.aggregate([
-                {"$match": {"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}}},
-                {"$group": {"_id": "$posInPep", "frequency": {"$sum": "$frequency"}}}
-            ])
-            for item in freq_data:
-                countHash2[item['_id']] = item['frequency']
+                # Fetch positional frequency data
+                countHash2 = {}
+                freq_data = mutation_freq_collection.aggregate([
+                    {"$match": {"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}}},
+                    {"$group": {"_id": "$posInPep", "frequency": {"$sum": "$frequency"}}}
+                ])
+                for item in freq_data:
+                    countHash2[item['_id']] = item['frequency']
 
-            plotData1 = [{"x": k, "y1": v} for k, v in sorted(countHash1.items(), key=lambda x: x[1], reverse=True)]
-            plotData2 = [{"x": k, "y1": v} for k, v in sorted(countHash2.items())]
+                plotData1 = [{"x": k, "y1": v} for k, v in sorted(countHash1.items(), key=lambda x: x[1], reverse=True)]
+                plotData2 = [{"x": k, "y1": v} for k, v in sorted(countHash2.items())]
 
-            # Fetch mutation ids to PMIDs
-            mutationid2pmid = {}
-            pmid_data = mutation_pmid_collection.find({"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}})
-            for pmid in pmid_data:
-                mutationid2pmid[pmid['mutationId']] = pmid['pmId']
+                # Fetch mutation ids to PMIDs
+                mutationid2pmid = {}
+                pmid_data = mutation_pmid_collection.find({"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}})
+                for pmid in pmid_data:
+                    mutationid2pmid[pmid['mutationId']] = pmid['pmId']
 
-            # Construct the mutation table
-            mutation_table = []
-            mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc})
-            for effect in mutation_effects:
-                row = [
-                    effect.get('chr', ''),
-                    effect.get('posInPep', ''),
-                    effect.get('refCodon', ''),
-                    effect.get('altCodon', ''),
-                    effect.get('posInPep', ''),
-                    effect.get('refResidue', ''),
-                    effect.get('altResidue', ''),
-                    cancerid2doname.get(effect.get('cancerId', ''), ''),
-                    doid2uberonid1.get(effect.get('cancerId', ''), ''),
-                    countHash2.get(effect.get('mutationId', ''), 0),
-                    effect.get('dataSrc', ''),
-                    annHash.get('uniprot', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),
-                    annHash.get('netnglyc', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),
-                    mutationid2pmid.get(effect['mutationId'], "")
-                ]
-                mutation_table.append(row)
+                # Construct the mutation table
+                mutation_table = []
+                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc})
+                for effect in mutation_effects:
+                    row = [
+                        effect.get('chr', ''),
+                        effect.get('posInPep', ''),
+                        effect.get('refCodon', ''),
+                        effect.get('altCodon', ''),
+                        effect.get('posInPep', ''),
+                        effect.get('refResidue', ''),
+                        effect.get('altResidue', ''),
+                        cancerid2doname.get(effect.get('cancerId', ''), ''),
+                        doid2uberonid1.get(effect.get('cancerId', ''), ''),
+                        countHash2.get(effect.get('mutationId', ''), 0),
+                        effect.get('dataSrc', ''),
+                        annHash.get('uniprot', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),
+                        annHash.get('netnglyc', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),
+                        mutationid2pmid.get(effect['mutationId'], "")
+                    ]
+                    mutation_table.append(row)
 
-            # Prepare the final output
-            outJson = {
-                "taskStatus": 1,
-                "inJson": inJson,
-                "mutationtable": mutation_table,
-                "plotdata1": plotData1,
-                "plotdata2": plotData2
-            }
+                # Prepare the final output
+                outJson = {
+                    "taskStatus": 1,
+                    "inJson": inJson,
+                    "mutationtable": mutation_table,
+                    "plotdata1": plotData1,
+                    "plotdata2": plotData2
+                }
 
-            return jsonify(outJson), 200
+                return jsonify(outJson), 200
 
-        except Exception as e:
-            return jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500
+            except Exception as e:
+                return jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500
+
+    # Register the resource with the API and the route
+    biomuta_ns.add_resource(GetProteinData, '/getProteinData')
+    api.add_namespace(biomuta_ns)
