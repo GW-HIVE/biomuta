@@ -12,7 +12,7 @@ from .searchBioMuta import searchBioMuta_route
 from .getProteinData import getProteinData_route
 from .forwarder import forward_genename_route
 
-MONGO_URI = os.getenv("MONGODB_CONNSTRING", "mongodb://localhost:27017/")
+MONGO_URI = os.getenv("MONGODB_CONNSTRING")
 DB_NAME = "biomuta_db"
 
 

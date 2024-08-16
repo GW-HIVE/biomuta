@@ -35,9 +35,9 @@ def main():
     data_path = config_obj["data_path"]
     mongo_network_name = f"{config_obj['dbinfo']['bridge_network']}_{server}"
      # Access the admin user and password
-    db_user = config_obj["dbinfo"]["admin"]["user"]
-    db_pass = config_obj["dbinfo"]["admin"]["password"]
     
+    db_user = config_obj["dbinfo"][db_name]["user"]
+    db_pass = config_obj["dbinfo"][db_name]["password"]
     conn_str = f"mongodb://{db_user}:{db_pass}@{mongo_container_name}:27017/?authSource={db_name}"
     ### create and populate command list
     cmd_list = []

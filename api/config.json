@@ -23,8 +23,7 @@
             "password":"superpass"
         },
         "biomuta_db": {
-        "db": "biomuta_db",  
-        "collections": {
+            "db": "biomuta_db",  
             "protein": "C_biomuta_protein",
             "mutation": "C_biomuta_mutation",
             "cancer": "C_biomuta_cancer",
@@ -39,7 +38,7 @@
             
             }
         
-        }
+        
 
     }
 }
