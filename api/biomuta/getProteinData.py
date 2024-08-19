@@ -318,8 +318,7 @@ from flask_restx import Resource, Namespace
 from pymongo import MongoClient
 
 def getProteinData_route(api, db):
-    # Namespace creation
-    biomuta_ns = Namespace('biomuta', description='BioMuta related operations')
+    
     
     protein_collection = db['C_biomuta_protein']
     ann_collection = db['C_biomuta_protein_ann']
@@ -434,11 +433,11 @@ def getProteinData_route(api, db):
                     "plotdata2": plotData2
                 }
 
-                return jsonify(outJson), 200
+                return outJson, 200
 
             except Exception as e:
-                return jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500
+                return {"taskStatus": 0, "errorMsg": str(e)}, 500
 
     # Register the resource with the API and the route
-    biomuta_ns.add_resource(GetProteinData, '/getProteinData')
-    api.add_namespace(biomuta_ns)
+    api.add_resource(GetProteinData, '/getProteinData')
+    

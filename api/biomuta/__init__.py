@@ -19,7 +19,7 @@ DB_NAME = "biomuta_db"
 def create_app():
     # Create Flask instance
     app = Flask(__name__)
-
+    
     CORS(app)
 
     # Initialize MongoDB client
