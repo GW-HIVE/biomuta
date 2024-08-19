@@ -313,13 +313,12 @@ Mutation Table: Data related to the requested protein.
 Plot Data: Two datasets for visual representation.
 CSV File: A downloadable link to the CSV file containing the mutation table
 '''
-from flask import request, jsonify
-from flask_restx import Resource, Namespace
+from flask import request, jsonify, make_response
+from flask_restx import Resource
 from pymongo import MongoClient
 
 def getProteinData_route(api, db):
-    
-    
+    # MongoDB collections
     protein_collection = db['C_biomuta_protein']
     ann_collection = db['C_biomuta_protein_ann']
     do2uberon_collection = db['C_biomuta_do2uberon']
@@ -336,7 +335,7 @@ def getProteinData_route(api, db):
                 # Fetch protein data
                 protein = protein_collection.find_one({"canonicalAc": field_value})
                 if not protein:
-                    return jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404
+                    return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404)
 
                 canonicalAc = protein['canonicalAc']
                 geneName = protein.get('geneName', 'Unknown Gene')
@@ -433,11 +432,10 @@ def getProteinData_route(api, db):
                     "plotdata2": plotData2
                 }
 
-                return outJson, 200
+                return make_response(jsonify(outJson), 200)
 
             except Exception as e:
-                return {"taskStatus": 0, "errorMsg": str(e)}, 500
+                return make_response(jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500)
 
-    # Register the resource with the API and the route
+    # Register the resource with the API and the route directly without namespace
     api.add_resource(GetProteinData, '/getProteinData')
-    
