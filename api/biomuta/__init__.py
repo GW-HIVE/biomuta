@@ -1,4 +1,4 @@
-from flask import Flask, request, g
+from flask import Flask, request, g, send_from_directory, make_response , jsonify
 from flask_cors import CORS
 from flask_restx import Api
 from pymongo import MongoClient
@@ -12,7 +12,7 @@ from .searchBioMuta import searchBioMuta_route
 from .getProteinData import getProteinData_route
 from .forwarder import forward_genename_route
 
-MONGO_URI = os.getenv("MONGODB_CONNSTRING")
+MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "biomuta_db"
 
 
@@ -20,7 +20,8 @@ def create_app():
     # Create Flask instance
     app = Flask(__name__)
     
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
+
 
     # Initialize MongoDB client
     mongo_client = MongoClient(MONGO_URI)
@@ -51,5 +52,13 @@ def create_app():
         duration = time.time() - g.start_time
         print(f"Request to {request.path} took {duration} seconds")
         return response
+    
+    @app.route('/download/<filename>', methods=['GET'])
+    def download_file(filename):
+        try:
+            # Serve the file from the /tmp directory
+            return send_from_directory(directory="/tmp", path=filename, as_attachment=True)
+        except Exception as e:
+            return make_response(jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500)
 
     return app

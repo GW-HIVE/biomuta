@@ -1,8 +1,10 @@
 from flask import request, jsonify, make_response
 from flask_restx import Resource
 from pymongo import MongoClient
-
 import time
+import datetime
+import os
+
 def getProteinData_route(api, db):
     # MongoDB collections
     protein_collection = db['C_biomuta_protein']
@@ -57,10 +59,10 @@ def getProteinData_route(api, db):
 
                 # Fetch mutation effects and construct the mutation table
                 mutation_table = []
-                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc}).limit(6)  # Limit to 5 rows
+                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc})
                 for effect in mutation_effects:
                     # Fetch the chr value from the biomuta_mutation collection
-                    mutation = mutation_collection.find_one({"_id": effect["mutationId"]})
+                    mutation = mutation_collection.find_one({"id": effect["mutationId"]})
                     chr_value = mutation.get("chr", '') if mutation else ''
 
                     # Fetch frequency, data source, and cancerId from the mutation_freq_collection
@@ -99,12 +101,28 @@ def getProteinData_route(api, db):
                         mutationid2pmid.get(effect['mutationId'], "NA")  # PMID (Corrected to use mutationid2pmid)
                     ]
                     mutation_table.append(row)
+				# Define the directory as /tmp (inside the Docker container)
+                output_directory = "/tmp"
 
+                # Generate the filename with a timestamp
+                timeStamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+                output_filename = f"biomuta-protein-details-{canonicalAc}-{timeStamp}.csv"
+                output_filepath = os.path.join(output_directory, output_filename)
+
+                # Write the output to a CSV file
+                with open(output_filepath, "w") as FW:
+                    header = ["Chr", "Pos in Pep", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer ID", "doName", "Frequency", "Data Source", "UniProt Annotation", "NetNGlyc Annotation", "PMID"]
+                    FW.write(",".join(header) + "\n")
+                    for row in mutation_table:
+                        FW.write(",".join([str(cell) for cell in row]) + "\n")
+                
+					
                 # Prepare the final output
                 outJson = {
                     "taskStatus": 1,
                     "inJson": inJson,
                     "mutationtable": mutation_table,
+                    "downloadfilename": output_filename 
                 }
 
                 end_time = time.time()
