@@ -158,7 +158,7 @@ def getProteinData_route(api, db):
                         data_source,  # Data Source (corrected)
                         uniprot_annotation_value,  # UniProt Annotation (corrected)
                         annHash.get('netnglyc', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),  # NetNGlyc Annotation (corrected)
-                        mutationid2pmid.get(effect['mutationId'], "")  # PMID
+                        mutationid2pmid.get(effect['mutationId'], "NA")  # PMID
                     ]
                     mutation_table.append(row)
                 end_table_construct = time.time()
