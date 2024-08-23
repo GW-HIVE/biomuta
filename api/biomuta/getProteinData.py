@@ -111,7 +111,7 @@ def getProteinData_route(api, db):
 
                 # Write the output to a CSV file
                 with open(output_filepath, "w") as FW:
-                    header = ["Chr", "Pos in Pep", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer ID", "doName", "Frequency", "Data Source", "UniProt Annotation", "NetNGlyc Annotation", "PMID"]
+                    header = ["Chr", "Pos in Pep", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer ID", "DoID", "Frequency", "Data Source", "UniProt Annotation", "NetNGlyc Annotation", "PMID"]
                     FW.write(",".join(header) + "\n")
                     for row in mutation_table:
                         FW.write(",".join([str(cell) for cell in row]) + "\n")
