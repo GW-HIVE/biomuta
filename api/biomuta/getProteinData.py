@@ -21,23 +21,29 @@ def getProteinData_route(api, db):
             field_value = inJson.get("fieldvalue", "").strip().lower()
 
             try:
-                # Start timer for the overall process
-                start_time = time.time()
+                total_start_time = time.time()
 
-                # Fetch protein data
-                start_protein_fetch = time.time()
+                # Fetch protein data in one query
                 protein = protein_collection.find_one({"canonicalAc": {"$regex": field_value, "$options": "i"}})
-                end_protein_fetch = time.time()
-                print(f"Protein fetch time: {end_protein_fetch - start_protein_fetch} seconds")
-
                 if not protein:
                     return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404)
 
                 canonicalAc = protein['canonicalAc']
 
-                # Fetch annotations
+                # Fetch all necessary annotations, mutation effects, frequencies, and cancer data in fewer queries
+                annotations = list(ann_collection.find({"canonicalAc": canonicalAc}))
+                mutation_effects = list(mutation_eff_collection.find({"canonicalAc": canonicalAc}))
+                mutation_ids = [effect["mutationId"] for effect in mutation_effects]
+
+                # Use $in operator to fetch multiple documents in one query
+                pmid_data = {pmid['mutationId']: pmid['pmId'] for pmid in mutation_pmid_collection.find({"mutationId": {"$in": mutation_ids}})}
+                mutation_data = {mutation["id"]: mutation for mutation in mutation_collection.find({"id": {"$in": mutation_ids}})}
+                freq_data = {freq["mutationId"]: freq for freq in mutation_freq_collection.find({"mutationId": {"$in": mutation_ids}})}
+                cancer_ids = list(set(freq.get('cancerId', '') for freq in freq_data.values()))
+                cancer_data = {cancer["id"]: cancer for cancer in cancer_collection.find({"id": {"$in": cancer_ids}})}
+
+                # Process annotations
                 annHash = {}
-                annotations = ann_collection.find({"canonicalAc": canonicalAc})
                 for ann in annotations:
                     annType = ann['annType']
                     if annType not in annHash:
@@ -51,57 +57,39 @@ def getProteinData_route(api, db):
                     for key in annHash[annType]:
                         annHash[annType][key] = "; ".join(sorted(set(annHash[annType][key])))
 
-                # Build mutation_id to pmid mapping
-                mutationid2pmid = {}
-                pmid_data = mutation_pmid_collection.find({"mutationId": {"$in": list(mutation_eff_collection.find({"canonicalAc": canonicalAc}).distinct("mutationId"))}})
-                for pmid in pmid_data:
-                    mutationid2pmid[pmid['mutationId']] = pmid['pmId']
-
-                # Fetch mutation effects and construct the mutation table
+                # Construct the mutation table
                 mutation_table = []
-                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc})
                 for effect in mutation_effects:
-                    # Fetch the chr value from the biomuta_mutation collection
-                    mutation = mutation_collection.find_one({"id": effect["mutationId"]})
-                    chr_value = mutation.get("chr", '') if mutation else ''
-
-                    # Fetch frequency, data source, and cancerId from the mutation_freq_collection
-                    freq_info = mutation_freq_collection.find_one({"mutationId": effect["mutationId"]})
-                    frequency = freq_info.get('frequency', 0) if freq_info else 0
-                    data_source = freq_info.get('dataSrc', '') if freq_info else ''
-                    cancer_id = freq_info.get('cancerId', '') if freq_info else ''
-
-                    # Fetch the doName from the cancer collection using the cancer_id
-                    cancer_info = cancer_collection.find_one({"id": cancer_id})
-                    do_name = cancer_info['doName'] if cancer_info else 'N/A'
+                    mutation_id = effect["mutationId"]
+                    mutation = mutation_data.get(mutation_id, {})
+                    freq_info = freq_data.get(mutation_id, {})
+                    cancer_info = cancer_data.get(freq_info.get('cancerId', ''), {})
 
                     # Fetch UniProt annotations
-                    uniprot_annotation = ann_collection.find_one({
-                        "canonicalAc": canonicalAc,
-                        "annType": "uniprot",
-                        "startPos": {"$lte": effect['posInPep']},
-                        "endPos": {"$gte": effect['posInPep']}
-                    })
+                    uniprot_annotation = next(
+                        (ann for ann in annotations if ann["annType"] == "uniprot" and
+                         ann["startPos"] <= effect['posInPep'] <= ann["endPos"]), None
+                    )
                     uniprot_annotation_value = f"{uniprot_annotation['annName']}({uniprot_annotation['annValue']})" if uniprot_annotation else 'NA'
 
-                    # Corrected row data to match the table headers
                     row = [
-                        chr_value,  # Chr
-                        effect.get('posInPep', ''),  # Pos in Pep
-                        effect.get('refCodon', ''),  # Ref Codon
-                        effect.get('altCodon', ''),  # Alt Codon
-                        effect.get('refResidue', ''),  # Ref Residue (corrected)
-                        effect.get('altResidue', ''),  # Alt Residue (corrected)
-                        cancer_id,  # Cancer ID
-                        do_name,  # doName from cancer collection
-                        frequency,  # Frequency (corrected)
-                        data_source,  # Data Source (corrected)
-                        uniprot_annotation_value,  # UniProt Annotation (corrected)
-                        annHash.get('netnglyc', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),  # NetNGlyc Annotation (corrected)
-                        mutationid2pmid.get(effect['mutationId'], "NA")  # PMID (Corrected to use mutationid2pmid)
+                        mutation.get("chr", ''),
+                        effect.get('posInPep', ''),
+                        effect.get('refCodon', ''),
+                        effect.get('altCodon', ''),
+                        effect.get('refResidue', ''),
+                        effect.get('altResidue', ''),
+                        freq_info.get('cancerId', ''),
+                        cancer_info.get('doName', 'N/A'),
+                        freq_info.get('frequency', 0),
+                        freq_info.get('dataSrc', ''),
+                        uniprot_annotation_value,
+                        annHash.get('netnglyc', {}).get(f"{effect['posInPep']}:{effect['refResidue']}:{effect['altResidue']}", ""),
+                        pmid_data.get(mutation_id, "NA")
                     ]
                     mutation_table.append(row)
-				# Define the directory as /tmp (inside the Docker container)
+
+                # Define the directory as /tmp (inside the Docker container)
                 output_directory = "/tmp"
 
                 # Generate the filename with a timestamp
@@ -109,15 +97,13 @@ def getProteinData_route(api, db):
                 output_filename = f"biomuta-protein-details-{canonicalAc}-{timeStamp}.csv"
                 output_filepath = os.path.join(output_directory, output_filename)
 
-                # Write the output to a CSV file
+                # Write the output to a CSV file in one operation
+                header = ["Chr", "Pos in Pep", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer ID", "DoID", "Frequency", "Data Source", "UniProt Annotation", "NetNGlyc Annotation", "PMID"]
                 with open(output_filepath, "w") as FW:
-                    header = ["Chr", "Pos in Pep", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer ID", "DoID", "Frequency", "Data Source", "UniProt Annotation", "NetNGlyc Annotation", "PMID"]
                     FW.write(",".join(header) + "\n")
                     for row in mutation_table:
                         FW.write(",".join([str(cell) for cell in row]) + "\n")
-                
-					
-                # Prepare the final output
+
                 outJson = {
                     "taskStatus": 1,
                     "inJson": inJson,
@@ -125,13 +111,12 @@ def getProteinData_route(api, db):
                     "downloadfilename": output_filename 
                 }
 
-                end_time = time.time()
-                print(f"Total processing time: {end_time - start_time} seconds")
+                print(f"Total processing time: {time.time() - total_start_time} seconds")
 
                 return make_response(jsonify(outJson), 200)
 
             except Exception as e:
                 return make_response(jsonify({"taskStatus": 0, "errorMsg": str(e)}), 500)
 
-    # Register the resource with the API and the route directly without namespace
     api.add_resource(GetProteinData, '/getProteinData')
+
