@@ -47,8 +47,10 @@ def getProteinData_route(api, db):
                         key = f"{pos}:{ann['ref']}:{ann['alt']}"
                         if key not in annHash[annType]:
                             annHash[annType][key] = []
-                        annValue = ann['annValue'].replace(";", "")
+                        # Ensure annValue is treated as a string
+                        annValue = str(ann['annValue']).replace(";", "")
                         annHash[annType][key].append(f"{ann['annName']}:{annValue}")
+
                 # Consolidate annotations in annHash
                 for annType in annHash:
                     for key in annHash[annType]:
@@ -149,7 +151,8 @@ def getProteinData_route(api, db):
 
                     # Corrected row data to match the table headers
                     row = [
-                        chr_value,  # Chr
+                        mutation.get('chr', ''),
+                        #chr_value,  # Chr
                         pos_value,  # genomic position
                         effect.get('posInPep', ''),  # Pos in Pep
                         effect.get('refCodon', ''),  # Ref Codon
@@ -174,7 +177,7 @@ def getProteinData_route(api, db):
                 output_filepath = os.path.join(output_directory, output_filename)
 
                 # Write the output to a CSV file in one operation
-                header = ["Chr", "Chr Position", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer Type", "UberonID", "Frequency", "Data Source", "UniProt Annotation", "Functional Predictions", "PMID"]
+                header = ["Chr", "Chr Position","Protein Position", "Ref Codon", "Alt Codon", "Ref Residue", "Alt Residue", "Cancer Type", "UberonID", "Frequency", "Data Source", "UniProt Annotation", "Functional Predictions", "PMID"]
                 with open(output_filepath, "w") as FW:
                     FW.write(",".join(header) + "\n")
                     for row in mutation_table:
