@@ -108,7 +108,7 @@ def getProteinData_route(api, db):
 
                 # Fetch mutation effects and construct the mutation table
                 mutation_table = []
-                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc})
+                mutation_effects = mutation_eff_collection.find({"canonicalAc": canonicalAc}).limit(28)
                 for effect in mutation_effects:
                     # Fetch the chr value from the biomuta_mutation collection
                     mutation = mutation_collection.find_one({"id": effect["mutationId"]})
