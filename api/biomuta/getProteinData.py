@@ -18,8 +18,17 @@ def getProteinData_route(api, db):
 
     class GetProteinData(Resource):
         def post(self):
+            # handle POST requests with JSON payload
             inJson = request.json
             field_value = inJson.get("fieldvalue", "").strip().lower()
+            return self.process_request(field_value)
+
+        def get(self):
+            # \handle GET requests with query parameters
+            field_value = request.args.get('gene', '').strip().lower()
+            return self.process_request(field_value)
+
+        def process_request(self, field_value):
 
             try:
                 # Start timer for the overall process
@@ -194,7 +203,7 @@ def getProteinData_route(api, db):
                 # Prepare the final output
                 outJson = {
                     "taskStatus": 1,
-                    "inJson": inJson,
+                   # "inJson": inJson,
                     "mutationtable": mutation_table,
                     "downloadfilename": output_filename ,
                     "plotdata1": plotData1,
