@@ -32,7 +32,14 @@ def getProteinData_route(api, db):
                 print(f"Protein fetch time: {end_protein_fetch - start_protein_fetch} seconds")
 
                 if not protein:
-                    return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found"}), 404)
+                    # If protein by canonicalAc is not found, try searching by gene name
+                    print("Protein not found by canonicalAc, trying to find by gene name...")
+
+                    
+                    protein = protein_collection.find_one({"geneName": {"$regex": field_value, "$options": "i"}})
+
+                    if not protein:
+                        return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found by either canonicalAc or gene name"}), 404)
 
                 canonicalAc = protein['canonicalAc']
 
