@@ -33,7 +33,7 @@ def forward_genename_route(api, db):
             # Redirect based on the result
             if protein is not None:
                 ac = protein['canonicalAc'][:-2]  
-                url = f"/biomuta/branchview/{ac}"
+                url = f"/biomuta/proteinview/{ac}"  # Directly to the protein view page  
             else:
                 url = "/biomuta/norecord"
 
