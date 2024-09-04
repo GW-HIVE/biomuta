@@ -33,17 +33,18 @@ def getProteinData_route(api, db):
                 # Start timer for the overall process
                 start_time = time.time()
 
-                # Determine if the request is for a gene name or a UniProt accession
-                if len(field_value) <= 15:  # Assuming gene names are short (less than or equal to 15 characters)
-                    # Fetch protein by gene name
-                    protein = protein_collection.find_one({"geneName": {"$regex": f"^{field_value}$", "$options": "i"}})
-                else:
-                    # Fetch protein by canonical accession
-                    protein = protein_collection.find_one({"canonicalAc": {"$regex": field_value, "$options": "i"}})
-
+                 # Attempt to fetch protein by canonical accession first
+                protein = protein_collection.find_one({"canonicalAc": {"$regex": field_value, "$options": "i"}})
                 if not protein:
-                    # If protein is not found by canonicalAc or gene name
-                    return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found by either canonicalAc or gene name"}), 404)
+                # If no protein found by canonicalAc, attempt to fetch by gene name
+                    print(f"Protein not found by canonicalAc, trying to find by gene name: {field_value}")
+                    protein = protein_collection.find_one({"geneName": {"$regex": f"^{field_value}$", "$options": "i"}})
+
+                    if not protein:
+                        # If still no protein found, return an error
+                        print(f"Protein not found by either canonicalAc or gene name: {field_value}")
+                        return make_response(jsonify({"taskStatus": 0, "errorMsg": "Protein not found by either canonicalAc or gene name"}), 404)
+
 
                 canonicalAc = protein['canonicalAc']
 
