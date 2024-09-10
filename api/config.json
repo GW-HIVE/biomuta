@@ -4,15 +4,14 @@
 
     "api_port": {
         "tst": "8082",
-        "prd": "8083"
+        "prd": "8082"
     },
     "data_path": "/data/shared/biomutadb/",
 
     "dbinfo":{
         "dbname":"biomuta_db",
         "port":{ 
-            "prd":"",
-            "beta":"8085",
+            "prd":"8084",
             "tst":"8084"
             
         },

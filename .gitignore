@@ -6,3 +6,5 @@ sql_exports/
 
 __pycache__/
 *.pyc
+dist/
+*egg-info/

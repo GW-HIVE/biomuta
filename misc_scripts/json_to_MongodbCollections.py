@@ -10,7 +10,7 @@ config = load_config('../api/config.json')
 
 # Extract MongoDB connection details from the configuration
 db_name = config['dbinfo']['dbname']
-mongo_port = config['dbinfo']['port']['tst']  # Replace 'tst' with the correct environment if needed
+mongo_port = config['dbinfo']['port']['prd']  # Replace 'tst' with the correct environment if needed
 mongo_host = f"mongodb://127.0.0.1:{mongo_port}/"
 admin_user = config['dbinfo']['admin']['user']
 admin_pass = config['dbinfo']['admin']['password']
