@@ -5,10 +5,15 @@ import json
 def csv_to_json(csv_file_path, json_file_path):
     # Read the CSV file
     df = pd.read_csv(csv_file_path)
-    
+
+    # Create a ticket and paste examples from each collection
+    # Pinpoint where each header comes from
+    # Rename headers (map col names)
+    df = df.rename(columns={})
+
     # Convert DataFrame to JSON format
     json_records = df.to_dict(orient='records')
-    
+
     # Write JSON records to a file
     with open(json_file_path, 'w', encoding='utf-8') as json_file:
         json.dump(json_records, json_file, indent=4)
