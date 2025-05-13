@@ -1,0 +1,10 @@
+*.log
+build/
+csv_exports/
+json_exports/
+sql_exports/
+
+__pycache__/
+*.pyc
+dist/
+*egg-info/
