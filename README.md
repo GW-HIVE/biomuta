@@ -64,7 +64,7 @@ cat /etc/nginx/sites-enabled/*
 ## Indexing
 ### Why is indexing needed?
 If you see that every single query in the MongoDB log shows `"planSummary":"COLLSCAN"`, it means MongoDB is scanning the entire collection (millions of documents) for every lookup by id. With queries scanning up to 3.28 million documents each taking 1-2 seconds, a single page load that triggers many such queries easily exceeds Apache/Nginx's proxy timeout, which returns the 502. The collection has no index on the `id` field, so as the collection grew over time, queries got progressively slower until they started timing out.
-
+### How to index
 The fix is to add an index inside the Docker container:
 ```
 docker exec -it running_biomuta_mongo_prd mongosh
