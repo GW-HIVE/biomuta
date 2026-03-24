@@ -13,7 +13,7 @@ Note to self: implement positional argument that takes the server instead of hav
 cd /data/shared/repos/biomuta
 senv # alias for source env/bin/activate
 # Replace 'tst' or 'prd' with the correct environment if needed in mongo_port = config['dbinfo']['port']['tst']
-python json_to_MongodbCollections.py
+python misc_scripts/json_to_MongodbCollections.py
 ```
 
 # Troubleshooting
