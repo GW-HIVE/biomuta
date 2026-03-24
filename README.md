@@ -9,6 +9,13 @@
 ```
 ## Load data
 Note to self: implement positional argument that takes the server instead of having to edit the script
+
+Next time and always:
+- Always run `create_indexes.py` after loading data — your loader script should call it automatically
+- A 502 from Apache usually means the backend timed out, not crashed — check app logs first
+- `docker logs <container> -f` is your best friend for real-time debugging
+- When queries are slow despite indexes existing, check that the index field name exactly matches what the code queries (we chased a `gene_name` vs `geneName` red herring)
+- `getIndexes()` and `explain("executionStats")` in mongosh are the fastest way to verify query performance
 ```
 cd /data/shared/repos/biomuta
 senv # alias for source env/bin/activate
