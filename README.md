@@ -79,7 +79,7 @@ db.C_biomuta_protein.createIndex({ id: 1 })
 db.C_biomuta_cancer.createIndex({ id: 1 })
 // etc. for all collections queried by id
 ```
-Going forward, your `load_data.py` script should create indexes after loading — add this after `insert_many`:
+Indexing is taken care of by the `load_data.py` script which creates indexes after loading — see this after `insert_many`:
 ```
 collection.create_index("id")
 ```
