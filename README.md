@@ -3,6 +3,14 @@
 - frontend prd: https://hivelab.biochemistry.gwu.edu/biomuta
 
 # Data Release Pipeline
+
+## Execution order
+1. Run `id_mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc`
+2. Run `codon_mapper.py` on your CSV → gets `refCodon`, `altCodon`, `posInCds`, `posInCodon`
+3. Join the two outputs on `canonicalAc` + `aa_pos` to build complete `biomuta_mutation_eff` records
+4. Write upsert script for `biomuta_mutation` and `biomuta_mutation_freq` (the collections directly from `biomuta.csv`)
+5. Write upsert script for `biomuta_mutation_eff` with the joined data
+
 ## JSON documents to be loaded into MongoDB
 ```
 /data/shared/repos/biomuta/json_exports/
