@@ -9,7 +9,7 @@
 ```
 cd preprocessing
 ```
-1. Run `id_mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc`
+1. Run `id_mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc` → outputs `$root/generated/uniprot_mapped_identifiers.csv`
 2. Run `codon_mapper.py` on your CSV → gets `refCodon`, `altCodon`, `posInCds`, `posInCodon`
 3. Join the two outputs on `canonicalAc` + `aa_pos` to build complete `biomuta_mutation_eff` records
 4. Write upsert script for `biomuta_mutation` and `biomuta_mutation_freq` (the collections directly from `biomuta.csv`)
