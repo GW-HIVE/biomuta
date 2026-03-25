@@ -1,10 +1,14 @@
-# URLs
+# URLs and paths
 - frontend tst: https://hivelab.tst.biochemistry.gwu.edu/biomuta
 - frontend prd: https://hivelab.biochemistry.gwu.edu/biomuta
+- BioMuta data release repo: `/data/shared/repos/biomuta`
 
 # Data Release Pipeline
 
 ## Execution order
+```
+cd preprocessing
+```
 1. Run `id_mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc`
 2. Run `codon_mapper.py` on your CSV → gets `refCodon`, `altCodon`, `posInCds`, `posInCodon`
 3. Join the two outputs on `canonicalAc` + `aa_pos` to build complete `biomuta_mutation_eff` records
