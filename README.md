@@ -90,3 +90,13 @@ Indexing is taken care of by the `json_to_MongodbCollections.py` script which cr
 ```
 collection.create_index("id")
 ```
+For some reason the above command doesn't create all indexes, so run these inside the docker mongo shell
+```
+db.C_biomuta_mutation_eff.createIndex({ canonicalAc: 1 })
+db.C_biomuta_mutation_eff.createIndex({ mutationId: 1 })
+db.C_biomuta_protein_ann.createIndex({ canonicalAc: 1 })
+db.C_biomuta_mutation_freq.createIndex({ mutationId: 1 })
+db.C_biomuta_mutation_pmid.createIndex({ mutationId: 1 })
+db.C_biomuta_do2uberon.createIndex({ doId: 1 })
+db.C_biomuta_cancer.createIndex({ id: 1 })
+```
