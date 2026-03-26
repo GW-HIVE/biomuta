@@ -15,6 +15,11 @@ cd preprocessing
 4. Write upsert script for `biomuta_mutation` and `biomuta_mutation_freq` (the collections directly from `biomuta.csv`)
 5. Write upsert script for `biomuta_mutation_eff` with the joined data
 
+```
+# Step 2
+python codon_mapper.py -c config.json -m /data/shared/repos/biomuta-old/generated_datasets/compiled/biomuta_v6.1_toy.csv -o /data/shared/repos/biomuta/generated/mapped_codons.csv
+```
+
 ## JSON documents to be loaded into MongoDB
 ```
 /data/shared/repos/biomuta/json_exports/
