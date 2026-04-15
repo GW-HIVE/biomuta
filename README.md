@@ -9,15 +9,19 @@
 ```
 cd preprocessing
 ```
-1. Run `do2uberon.py` to update the `C_biomuta_do2uberon` JSON document
+1. Run `do2uberon.py` to update the `C_biomuta_do2uberon` JSON document. The output will be written to the location specified under `--output_json`.
    ```
    python do2uberon.py --biomuta_csv /data/shared/repos/biomuta-old/generated_datasets/compiled/biomuta_v6.1.csv --expression_csv /data/shared/repos/biomuta/downloads/human_protein_expression_normal.csv --do2uberon_json /data/shared/repos/biomuta/json_exports/biomuta_do2uberon.json --output_json /data/shared/repos/biomuta/generated/6.1/biomuta_do2uberon.json
    ```
-2. Run `id-mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc` → outputs `$root/generated/uniprot_mapped_identifiers.csv`
-3. Run `codon-mapper.py` on your CSV → gets `refCodon`, `altCodon`, `posInCds`, `posInCodon`
-4. Join the two outputs on `canonicalAc` + `aa_pos` to build complete `biomuta_mutation_eff` records
-5. Write upsert script for `biomuta_mutation` and `biomuta_mutation_freq` (the collections directly from `biomuta.csv`)
-6. Write upsert script for `biomuta_mutation_eff` with the joined data
+2. Run `biomuta-protein.py` to update the `C_biomuta_protein` JSON document. The output will be written to the location specified under `--output-json`
+   ```
+   python biomuta-protein.py --biomuta-csv /data/shared/repos/biomuta-old/generated_datasets/compiled/biomuta_v6.1.csv --existing-protein-json /data/shared/repos/biomuta/json_exports/biomuta_protein.json --output-json /data/shared/repos/biomuta/generated/6.1/biomuta_protein.json
+   ```
+3. Run `id-mapper.py` on `biomuta.csv` → gets `transcriptId`, `peptideId`, `refseqAc` per `canonicalAc` → outputs `$root/generated/uniprot_mapped_identifiers.csv`
+4. Run `codon-mapper.py` on your CSV → gets `refCodon`, `altCodon`, `posInCds`, `posInCodon`
+5. Join the two outputs on `canonicalAc` + `aa_pos` to build complete `biomuta_mutation_eff` records
+6. Write upsert script for `biomuta_mutation` and `biomuta_mutation_freq` (the collections directly from `biomuta.csv`)
+7. Write upsert script for `biomuta_mutation_eff` with the joined data
 
 ```
 # Step 2
