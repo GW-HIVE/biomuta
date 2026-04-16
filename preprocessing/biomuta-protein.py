@@ -5,6 +5,8 @@ import argparse
 import csv
 import json
 import logging
+import requests
+import time
 from pathlib import Path
 
 
@@ -177,6 +179,93 @@ def write_missing_output(path, missing_ids):
         for canonical_ac in sorted(missing_ids):
             handle.write(f"{canonical_ac}\n")
 
+UNIPROT_IDMAPPING_RUN = "https://rest.uniprot.org/idmapping/run"
+UNIPROT_IDMAPPING_STATUS = "https://rest.uniprot.org/idmapping/status/{job_id}"
+UNIPROT_IDMAPPING_RESULTS = "https://rest.uniprot.org/idmapping/results/{job_id}"
+
+
+def submit_idmapping_job(ids, to_db):
+    response = requests.post(
+        UNIPROT_IDMAPPING_RUN,
+        data={"from": "UniProtKB_AC-ID", "to": to_db, "ids": ",".join(ids)},
+    )
+    response.raise_for_status()
+    return response.json()["jobId"]
+
+
+def poll_idmapping_job(job_id, poll_interval=3, max_wait=120):
+    url = UNIPROT_IDMAPPING_STATUS.format(job_id=job_id)
+    elapsed = 0
+    while elapsed < max_wait:
+        response = requests.get(url, headers={"accept": "application/json"})
+        response.raise_for_status()
+        data = response.json()
+        if "results" in data or "failedIds" in data:
+            return data
+        time.sleep(poll_interval)
+        elapsed += poll_interval
+    raise TimeoutError(f"UniProt ID mapping job {job_id} did not complete within {max_wait}s")
+
+
+def fetch_idmapping_results(job_id):
+    url = UNIPROT_IDMAPPING_RESULTS.format(job_id=job_id)
+    response = requests.get(url, headers={"accept": "application/json"})
+    response.raise_for_status()
+    data = response.json()
+    return {item["from"]: item["to"] for item in data.get("results", [])}
+
+
+def batch_idmapping(ids, to_db, batch_size=500):
+    results = {}
+    ids = list(ids)
+    for i in range(0, len(ids), batch_size):
+        batch = ids[i: i + batch_size]
+        try:
+            job_id = submit_idmapping_job(batch, to_db)
+            poll_idmapping_job(job_id)
+            results.update(fetch_idmapping_results(job_id))
+            logging.info("UniProt idmapping (%s): mapped %d/%d in batch", to_db, len(results), len(ids))
+        except Exception as exc:
+            logging.warning("UniProt idmapping (%s) batch failed: %s", to_db, exc)
+    return results
+
+
+def fallback_uniprot_mappings(missing_canonical, records):
+    """Try to fill peptideId, geneName, refseqAc via UniProt ID mapping for still-missing entries."""
+    missing_list = list(missing_canonical)
+    if not missing_list:
+        return
+
+    logging.info("Falling back to UniProt ID mapping for %d canonical ACs", len(missing_list))
+
+    record_by_ac = {r["canonicalAc"]: r for r in records}
+
+    needs_peptide = [ac for ac in missing_list if not record_by_ac.get(ac, {}).get("peptideId")]
+    needs_gene    = [ac for ac in missing_list if not record_by_ac.get(ac, {}).get("geneName")]
+    needs_refseq  = [ac for ac in missing_list if not record_by_ac.get(ac, {}).get("refseqAc")]
+
+    peptide_map = batch_idmapping(needs_peptide, "Ensembl_Protein") if needs_peptide else {}
+    gene_map    = batch_idmapping(needs_gene,    "Gene_Name")        if needs_gene    else {}
+    refseq_map  = batch_idmapping(needs_refseq,  "RefSeq_Protein")   if needs_refseq  else {}
+
+    still_missing = set()
+    for ac in missing_list:
+        record = record_by_ac.get(ac)
+        if not record:
+            continue
+        if not record["peptideId"] and ac in peptide_map:
+            record["peptideId"] = normalize_peptide_id(peptide_map[ac])
+        if not record["geneName"] and ac in gene_map:
+            record["geneName"] = gene_map[ac]
+        if not record["refseqAc"] and ac in refseq_map:
+            record["refseqAc"] = refseq_map[ac]
+
+        if not record["peptideId"] or not record["geneName"] or not record["refseqAc"]:
+            still_missing.add(ac)
+
+    missing_canonical.clear()
+    missing_canonical.update(still_missing)
+    logging.info("%d canonical ACs still missing after UniProt fallback", len(still_missing))
 
 def main():
     args = parse_args()
@@ -262,6 +351,7 @@ def main():
     with open(output_path, "w", encoding="utf-8") as handle:
         json.dump(records, handle, indent=2)
 
+    fallback_uniprot_mappings(missing_canonical, records)
     write_missing_output(args.missing_output, missing_canonical)
 
     logging.info("Wrote %d protein records to %s", len(records), args.output_json)
