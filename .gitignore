@@ -2,6 +2,7 @@
 build/
 csv_exports/
 downloads/
+generated/
 json_exports/
 sql_exports/
 

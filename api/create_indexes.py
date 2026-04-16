@@ -16,7 +16,7 @@ def main():
         sys.exit(0)
     server = options.server
     if server.lower() not in {"tst", "prd"}:
-        print('Invalid server name. Excepcts "tst" or "prd"')
+        print('Invalid server name. Expects "tst" or "prd"')
         sys.exit(0)
 
     ### get config info for docker container creation
