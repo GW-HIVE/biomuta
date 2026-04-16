@@ -1,0 +1,5 @@
+{
+    "codonfile": "/data/shared/repos/biomuta/downloads/codon_table.tsv",
+    "cdsfile": "/data/shared/repos/biomuta/downloads/Homo_sapiens.GRCh38.cds.all.fa",
+    "gtffile": "/data/shared/repos/biomuta/downloads/Homo_sapiens.GRCh38.115.gtf"
+}

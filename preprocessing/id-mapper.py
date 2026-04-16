@@ -36,14 +36,15 @@ def map_uniprot_to_identifiers(
         raise ValueError(f"UniProt column '{uniprot_column}' not found in primary file. Available columns: {', '.join(primary_df.columns)}")
     
     # Create result DataFrame with UniProt accessions
-    result = primary_df[[uniprot_column]].copy()
+    primary_df['uniprot_split'] = primary_df[uniprot_column].str.split('-').str[0]
+    result = primary_df[['uniprot_split']].copy()
     
     # Process each mapping file
     for mapping_info in mapping_files:
         try:
             # Extract mapping information
             map_file = mapping_info['file']
-            map_uniprot_col = mapping_info['uniprot_column']
+            map_uniprot_col = mapping_info['uniprot_column'].str.split('-').str[0]
             map_id_col = mapping_info['identifier_column']
             id_type = mapping_info['identifier_type']
             
@@ -86,19 +87,44 @@ def example_usage():
     uniprot_column = "uniprotkb_canonical_ac"
     
     # Define mapping files
+    mapping_dir = "/data/shared/repos/biomuta/downloads"
     mapping_files = [
         {
-            'file': 'gene_names.csv',
-            'uniprot_column': 'UniProt_Accession',
-            'identifier_column': 'Gene_Name',
-            'identifier_type': 'Gene_Name'
+            'file': os.path.join(mapping_dir, 'human_protein_expression_normal.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'uberon_anatomical_id',
+            'identifier_type': 'uberonId'
         },
         {
-            'file': 'ensembl_ids.csv',
-            'uniprot_column': 'Accession',
-            'identifier_column': 'Ensembl_ID',
-            'identifier_type': 'Ensembl_ID'
+            'file': os.path.join(mapping_dir, 'human_protein_genenames_uniprotkb.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'gene_symbol_recommended',
+            'identifier_type': 'geneName'
         },
+        {
+            'file': os.path.join(mapping_dir, 'human_protein_masterlist.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'gene_name',
+            'identifier_type': 'geneName'
+        },
+        {
+            'file': os.path.join(mapping_dir, 'human_protein_xref_refseq.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'xref_id',
+            'identifier_type': 'refseqAc'
+        },
+        {
+            'file': os.path.join(mapping_dir, 'human_protein_transcriptlocus.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'transcript_id',
+            'identifier_type': 'transcriptId'
+        },
+        {
+            'file': os.path.join(mapping_dir, 'human_protein_transcriptlocus.csv'),
+            'uniprot_column': 'uniprotkb_canonical_ac',
+            'identifier_column': 'peptide_id',
+            'identifier_type': 'peptideId'
+        }
         # Add more mapping files as needed
     ]
     
@@ -107,7 +133,7 @@ def example_usage():
         primary_file=primary_file,
         uniprot_column=uniprot_column,
         mapping_files=mapping_files,
-        output_file="uniprot_mapped_identifiers.csv"
+        output_file="/data/shared/repos/biomuta/generated/uniprot_mapped_identifiers.csv"
     )
     
     # Show first few rows of the result

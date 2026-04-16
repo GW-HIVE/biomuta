@@ -10,7 +10,7 @@ config = load_config('../api/config.json')
 
 # Extract MongoDB connection details from the configuration
 db_name = config['dbinfo']['dbname']
-mongo_port = config['dbinfo']['port']['prd']  # Replace 'tst' with the correct environment if needed
+mongo_port = config['dbinfo']['port']['tst']  # Replace 'tst' with the correct environment if needed
 mongo_host = f"mongodb://127.0.0.1:{mongo_port}/"
 admin_user = config['dbinfo']['admin']['user']
 admin_pass = config['dbinfo']['admin']['password']
@@ -26,8 +26,11 @@ def insert_json_to_mongo(json_file_path, collection_name):
         json_records = json.load(json_file)
     
     collection = db[collection_name]
+    collection.drop()  # clears existing data
     collection.insert_many(json_records)
     print(f"Inserted {len(json_records)} records into the {collection_name} collection")
+    collection.create_index("id")
+    print(f"Indexed {collection_name}")
 
 # Directory containing JSON files
 json_dir = '../json_exports'
