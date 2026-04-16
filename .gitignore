@@ -1,6 +1,7 @@
 *.log
 build/
 csv_exports/
+downloads/
 json_exports/
 sql_exports/
 
@@ -8,3 +9,4 @@ __pycache__/
 *.pyc
 dist/
 *egg-info/
+misc_scripts/output.txt
