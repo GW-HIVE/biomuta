@@ -11,3 +11,5 @@ __pycache__/
 dist/
 *egg-info/
 misc_scripts/output.txt
+nohup.out
+.vscode/
